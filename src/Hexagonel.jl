@@ -1,4 +1,4 @@
-export Hexagonel, hexagonel
+export Hexagonel
 
 """
     Hexagonel{Shape, BC} <: BoundedLattice{2, BC}
@@ -9,4 +9,5 @@ Ref: https://en.wikipedia.org/wiki/Hexagonal_lattice
 """
 struct Hexagonel{Shape <: Tuple, BC} <: BoundedLattice{2, BC} end
 
-hexagonel(x, y; boundary=Periodic) = Hexagonel{Tuple{x, y}, boundary}()
+Hexagonel(x, y; boundary=Periodic) = Hexagonel{Tuple{x, y}, boundary}()
+nameof(::Hexagonel) = "Hexagonel Lattice"

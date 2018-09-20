@@ -1,4 +1,4 @@
-import Base: size, length, show
+import Base: size, ndims, length, show, nameof
 
 """
     AbstractLattice{N}
@@ -31,7 +31,7 @@ function size end
 
 Returns the name of this lattice.
 """
-function name end
+nameof(ltc::AbstractLattice) = "Abstract Lattice"
 
 """
     length(lattice) -> Int

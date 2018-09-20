@@ -32,4 +32,6 @@ isperiodic(::Type{<:BoundedLattice}) = false
 isperiodic(::T) where {T <: BoundedLattice} = isperiodic(T)
 boundary(::T) where {T <: BoundedLattice} = boundary(T)
 
-show(io::IO, lattice::BoundedLattice) = print(io, "$(name(lattice)):\n  $(boundary(lattice)) boundary\n  size: $(size(lattice))")
+nameof(::BoundedLattice) = "Bounded Lattice"
+
+show(io::IO, lattice::BoundedLattice) = print(io, "$(nameof(lattice)):\n  $(boundary(lattice)) boundary\n  size: $(size(lattice))")

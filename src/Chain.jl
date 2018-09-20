@@ -1,4 +1,4 @@
-export Chain, chain
+export Chain
 
 """
     Chain{L, BC} <: AbstractLattice
@@ -8,16 +8,16 @@ Chain lattice. `L` is the length of this chain, and `BC` is the boundary conditi
 struct Chain{L, BC <: BoundaryCondition} <: BoundedLattice{1, BC} end
 
 """
-    chain(length; [boundary=Periodic])
+    Chain(length; [boundary=Periodic])
 
 Returns a chain lattice with given `length`, the boundary is set to `Periodic`
 by default.
 """
-chain(len::Int; boundary=Periodic) = Chain{len, boundary}()
+Chain(len::Int; boundary=Periodic) = Chain{len, boundary}()
 
 size(::Chain{L}) where L = (L, )
 length(::Chain{L}) where L = L
-name(::Chain) = "Chain Lattice"
+nameof(::Chain) = "Chain Lattice"
 
 # NOTE: OneTo is faster than 1:L
 sites(::Chain{L}) where L = Base.OneTo(L)

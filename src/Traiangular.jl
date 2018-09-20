@@ -1,4 +1,4 @@
-export Triangular, triangular
+export Triangular
 
 """
     Triangular{Shape, BC} <: BoundedLattice{2, BC}
@@ -9,4 +9,6 @@ Ref: https://en.wikipedia.org/wiki/Hexagonal_lattice
 """
 struct Triangular{Shape, BC} <: BoundedLattice{2, BC} end
 
-triangular(x, y; boundary=Periodic) = Triangular{Tuple{x, y}, boundary}()
+Triangular(x, y; boundary=Periodic) = Triangular{Tuple{x, y}, boundary}()
+
+nameof(::Triangular) = "Triangular Lattice"

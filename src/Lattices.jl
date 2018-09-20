@@ -1,4 +1,4 @@
-module Lattice
+module Lattices
 
 include("BoundaryConditions.jl")
 
