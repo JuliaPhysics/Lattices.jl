@@ -10,3 +10,4 @@ for i = 1:5
 end
 test_sites
 @test collect(sites(lattice)) == test_sites
+edges(lattice)

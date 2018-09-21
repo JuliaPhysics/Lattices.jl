@@ -8,7 +8,7 @@ const SquareEdgeType = Tuple{SquareSiteType, SquareSiteType}
 
 Square lattice.
 """
-struct Square{Shape, BC} <: BoundedLattice{2, BC} end
+struct Square{Shape, BC <: BoundaryCondition} <: BoundedLattice{2, BC} end
 
 """
     Square(height, width; [boundary=Periodic])
@@ -23,6 +23,22 @@ length(::Square{Tuple{height, width}}) where {height, width} = height * width
 nameof(::Square) = "Square Lattice"
 
 sites(lattice::Square) = SquareSitesIterator(lattice)
+
+function edges(lattice::Square; length::Int=1)
+    if isodd(length)
+        k = (length + 1) ÷ 2
+        SquareFusedEdgesIterator(
+            SquareEdgesIterator{:vertical, k}(lattice),
+            SquareEdgesIterator{:horizontal, k}(lattice)
+        )
+    else
+        k = length ÷ 2
+        SquareFusedEdgesIterator(
+            SquareEdgesIterator{:upright, k}(lattice),
+            SquareEdgesIterator{:upleft, k}(lattice)
+        )
+    end
+end
 
 struct SquareSitesIterator{Shape}
     SquareSitesIterator(ltc::Square{S}) where S = new{S}()
@@ -45,6 +61,52 @@ Base.eltype(::SquareSitesIterator) = SquareSiteType
 
 ########################
 
+struct SquareFusedEdgesIterator{T <: Tuple}
+    its::T
+end
+
+SquareFusedEdgesIterator(its...) = SquareFusedEdgesIterator(its)
+
+Base.eltype(::SquareFusedEdgesIterator) = SquareEdgeType
+Base.length(it::SquareFusedEdgesIterator) = sum(length, it.its)
+
+function Base.iterate(it::SquareFusedEdgesIterator, state=((1, 1, 1), 1))
+    it_state, nit = state
+    if nit > length(it.its)
+        return nothing
+    end
+
+    it_result = iterate(it.its[nit], it_state)
+
+    if it_result !== nothing
+        result, it_state = it_result
+        return result, (it_state, nit)
+    end
+
+    if nit + 1 > length(it.its)
+        return nothing
+    end
+
+    it_result = iterate(it.its[nit+1], (1, 1, 1))
+    if it_result !== nothing
+        result, it_state = it_result
+        return result, (it_state, nit+1)
+    end
+
+    nothing
+end
+
+function Base.show(io::IO, it::SquareFusedEdgesIterator)
+    println(io, "Fused SquareEdgesIterator:")
+    for each in it.its
+        if each === last(it.its)
+            print(io, "  ", each)
+        else
+            println(io, "  ", each)
+        end
+    end
+end
+
 """
     SquareEdgesIterator{Region, Order, LT}
 
@@ -56,20 +118,99 @@ end
 
 Base.eltype(::SquareEdgesIterator) = SquareEdgeType
 
-const FixedSquare{h, w} = Square{Fixed, Tuple{h, w}} where {h, w}
-Base.length(::SquareEdgesIterator{:vertical, O, FixedSquare{h, w}}) where {O, h, w} = (h - O) * w
-Base.length(::SquareEdgesIterator{:horizontal, O, FixedSquare{h, w}}) where {O, h, w} = (w - O) * h
-Base.length(::SquareEdgesIterator{:upright, O, FixedSquare{h, w}}) where {O, h, w} = (w - k) * (h - k)
-Base.length(::SquareEdgesIterator{:upleft, O, FixedSquare{h, w}}) where {O, h, w} = (w - k) * (h - k)
+const FixedSquare{h, w} = Square{Tuple{h, w}, Fixed} where {h, w}
+Base.length(::SquareEdgesIterator{:vertical, K, FixedSquare{h, w}}) where {K, h, w} = (h - K) * w
+Base.length(::SquareEdgesIterator{:horizontal, K, FixedSquare{h, w}}) where {K, h, w} = (w - K) * h
+Base.length(::SquareEdgesIterator{:upright, K, FixedSquare{h, w}}) where {K, h, w} = (w - k) * (h - k)
+Base.length(::SquareEdgesIterator{:upleft, K, FixedSquare{h, w}}) where {K, h, w} = (w - k) * (h - k)
 
-function Base.iterate(::SquareEdgesIterator{:vertical, O, FixedSquare{h, w}}) where {O, h, w}
+function Base.iterate(it::SquareEdgesIterator{:vertical, K, FixedSquare{h, w}}, state = (1, 1, 1)) where {K, h, w}
+    i, j, count = state
+    if count > length(it)
+        return nothing
+    elseif i + K > h
+        return ((1, j+1), (1+K, j+1)), (2, j+1, count + 1)
+    else
+        ((i, j), (i+K, j)), (i+1, j, count+1)
+    end
 end
 
-function Base.iterate(::SquareEdgesIterator{:horizontal, O, FixedSquare{h, w}}) where {O, h, w}
+function Base.iterate(it::SquareEdgesIterator{:horizontal, K, FixedSquare{h, w}}, state = (1, 1, 1)) where {K, h, w}
+    i, j, count = state
+    if count > length(it)
+        return nothing
+    elseif i > h
+        return ((1, j+1), (1, j+K+1)), (2, j+1, count + 1)
+    else
+        ((i, j), (i, j+K)), (i+1, j, count+1)
+    end
 end
 
-function Base.iterate(::SquareEdgesIterator{:upright, O, FixedSquare{h, w}}) where {O, h, w}
+function Base.iterate(it::SquareEdgesIterator{:upright, K, FixedSquare{h, w}}, state = (1, 1, 1)) where {K, h, w}
+    i, j, count = state
+    if count > length(it)
+        return nothing
+    elseif i+K > h
+        return ((1, j+1), (1+K, j+K+1)), (2, j+1, count+1)
+    else
+        ((i, j), (i+K, j+K)), (i+1, j, count+1)
+    end
 end
 
-function Base.iterate(::SquareEdgesIterator{:upleft, O, FixedSquare{h, w}}) where {O, h, w}
+function Base.iterate(it::SquareEdgesIterator{:upleft, K, FixedSquare{h, w}}, state = (1, 1, 1)) where {K, h, w}
+    i, j, count = state
+    if count > length(it)
+        return nothing
+    elseif i+K > h
+        return ((1+K, j+1), (1, j+K+1)), (2, j+1, count+1)
+    else
+        ((i+K, j), (i, j+K)), (i+1, j, count+1)
+    end
+end
+
+#####################
+const PeriodicSquare{h, w} = Square{Tuple{h, w}, Periodic} where {h, w}
+Base.length(::SquareEdgesIterator{R, K, PeriodicSquare{h, w}}) where {R, K, h, w} = h * w
+
+function Base.iterate(it::SquareEdgesIterator{:vertical, K, PeriodicSquare{h, w}}, state = (1, 1, 1)) where {K, h, w}
+    i, j, count = state
+    if count > length(it)
+        return nothing
+    elseif i > h
+        return ((1, j+1), (K % h + 1, j+1)), (2, j+1, count+1)
+    else
+        ((i, j), ((i+K-1)%h+1, j)), (i+1, j, count+1)
+    end
+end
+
+function Base.iterate(it::SquareEdgesIterator{:horizontal, K, PeriodicSquare{h, w}}, state = (1, 1, 1)) where {K, h, w}
+    i, j, count = state
+    if count > length(it)
+        return nothing
+    elseif i > h
+        return ((1, j+1), (1, (j+K)%w+1)), (2, j+1, count+1)
+    else
+        ((i, j), (i, (j+K-1)%w+1)), (i+1, j, count+1)
+    end
+end
+
+function Base.iterate(it::SquareEdgesIterator{:upright, K, PeriodicSquare{h, w}}, state = (1, 1, 1)) where {K, h, w}
+    i, j, count = state
+    if count > length(it)
+        return nothing
+    elseif i < h
+        return ((1, j+1), (K%h+1, (j+K)%w+1)), (2, j+1, count+1)
+    else
+        ((i, j), (i+K-1)%h+1, (j+K-1)%w+1), (i+1, j, count+1)
+    end
+end
+
+function Base.iterate(it::SquareEdgesIterator{:upleft, K, PeriodicSquare{h, w}}, state = (1, 1, 1)) where {K, h, w}
+    i, j, count = state
+    if count > length(it)
+    elseif i < h
+        return ((K%h+1, j+1), (1, (j+K)%w+1)), (2, j+1, count+1)
+    else
+        (((i+K-1)%h+1, j), (i, (j+K-1)%w+1)), (i+1, j, count+1)
+    end
 end
