@@ -45,5 +45,7 @@ function Base.iterate(::ChainEdgesIterator{L, O, Periodic}, state=1) where {L, O
     (state, mod1(state + O, L)), state + 1
 end
 
+Base.getindex(ltc::Chain, inds::Tuple{Int}) = Base.getindex(ltc, first(inds))
+
 Base.getindex(ltc::Chain{L, Fixed}, x::Int) where L = 1 <= x <= L ? x : throw(BoundsError(ltc, x))
 Base.getindex(ltc::Chain{L, Periodic}, x::Int) where L = mod1(x, L)
