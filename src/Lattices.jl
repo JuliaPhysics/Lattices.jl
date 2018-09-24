@@ -1,5 +1,7 @@
 module Lattices
 
+include("utils.jl")
+
 include("BoundaryConditions.jl")
 
 # Basic Interface

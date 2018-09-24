@@ -18,9 +18,9 @@ by default.
 """
 Square(height::Int, width::Int; boundary=Periodic) = Square{Tuple{height, width}, boundary}()
 
-size(::Square{Tuple{height, width}}) where {height, width} = (height, width)
-length(::Square{Tuple{height, width}}) where {height, width} = height * width
-nameof(::Square) = "Square Lattice"
+Base.size(::Square{Tuple{height, width}}) where {height, width} = (height, width)
+Base.length(::Square{Tuple{height, width}}) where {height, width} = height * width
+Base.nameof(::Square) = "Square Lattice"
 
 sites(lattice::Square) = SquareSitesIterator(lattice)
 
@@ -214,3 +214,11 @@ function Base.iterate(it::SquareEdgesIterator{:upleft, K, PeriodicSquare{h, w}},
         (((i+K-1)%h+1, j), (i, (j+K-1)%w+1)), (i+1, j, count+1)
     end
 end
+
+Base.getindex(lattice::Square, inds::Int...) = getindex(lattice, inds)
+Base.getindex(lattice::FixedSquare{h, w}, inds::NTuple{2, Int}) where h where w =
+    inds[1] > h ? throw(BoundsError(lattice, inds)) :
+    inds[2] > w ? throw(BoundsError(lattice, inds)) :
+    inds[1] + (inds[2] - 1) * h
+Base.getindex(lattice::PeriodicSquare{h, w}, inds::NTuple{2, Int}) where h where w =
+    mod1(inds[1], h) + mod(inds[2] - 1, w) * h
