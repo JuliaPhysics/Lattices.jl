@@ -222,3 +222,10 @@ Base.getindex(lattice::FixedSquare{h, w}, inds::NTuple{2, Int}) where h where w 
     inds[1] + (inds[2] - 1) * h
 Base.getindex(lattice::PeriodicSquare{h, w}, inds::NTuple{2, Int}) where h where w =
     mod1(inds[1], h) + mod(inds[2] - 1, w) * h
+
+(ltc::FixedSquare{h, w})(s::Int) where {h, w} =
+    s > length(ltc) || s < 1 ? throw(BoundsError(ltc, s)) :
+    mod1(s, h), div(s - 1, h) + 1
+
+(ltc::PeriodicSquare{h, w})(s::Int) where {h, w} =
+    mod1(s, h), div(s - 1, h) + 1
