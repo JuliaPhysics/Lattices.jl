@@ -1,6 +1,10 @@
-authors = ["Roger-luo <hiroger@qq.com>"]
 name = "Lattices"
 uuid = "df68907e-b52c-11e8-0751-8d8164e5ce26"
+authors = ["Roger-luo <hiroger@qq.com>"]
 version = "0.1.0"
 
 [deps]
+
+[extras]
+BenchmarkTools = "6e4b80f9-dd63-53aa-95a3-0cdb28fa8baf"
+Revise = "295af30f-e4ad-537b-8983-00126c2a3abe"
