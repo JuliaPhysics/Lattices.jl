@@ -1,20 +1,11 @@
 # Lattice.jl
 
-A library for defining lattices in Julia. (work in progress)
+A library for defining lattices in Julia.
 
 ## Install
 
-This package is not registered yet. Please install it with `dev` in package mode:
-
 ```
-pkg> dev https://github.com/Roger-luo/Lattices.jl.git
-```
-
-or just clone it and run with `julia --project`:
-
-```sh
-$ cd Lattice.jl
-$ julia --project
+pkg> add https://github.com/Roger-luo/Lattices.jl.git
 ```
 
 ## A glance of the interface
@@ -37,6 +28,11 @@ each = 2
 each = 3
 each = 4
 ```
+
+## TODO
+
+- [ ] Hexagonel Lattice
+- [ ] Triangular Lattice
 
 ## License
 
