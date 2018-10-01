@@ -7,7 +7,7 @@ A library for defining lattices in Julia.
 ## Install
 
 ```
-pkg> add https://github.com/Roger-luo/Lattices.jl.git
+pkg> add Lattices
 ```
 
 ## A glance of the interface
