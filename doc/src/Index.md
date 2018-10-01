@@ -10,11 +10,11 @@ region/lattice.
 
 #### Site iterator
 
-**function**: `sites`
+**function**: [`sites`](@ref)
 
 #### Edge iterator
 
-**function**: `edges`
+**function**: [`edges`](@ref)
 
 #### Surround iterator (Optional)
 
@@ -23,3 +23,10 @@ region/lattice.
 #### Face iterator (Optional)
 
 **function**: `faces`
+
+## Lattices
+
+```@autodocs
+Modules = [Lattices]
+Order   = [:type, :function]
+```
