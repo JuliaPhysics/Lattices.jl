@@ -13,10 +13,8 @@ makedocs(
 )
 
 deploydocs(
-     repo = "git@github.com:Roger-luo/Lattices.jl.git",
+     repo = "github.com:Roger-luo/Lattices.jl.git",
      target = "build",
      julia = "1.0",
      osname = "linux",
-     deps = nothing,
-     make = nothing,
 )
