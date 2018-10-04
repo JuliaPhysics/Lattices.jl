@@ -8,6 +8,8 @@ region/lattice.
 
 ## Interfaces
 
+#### Conversion between lattice position and serial number
+
 #### Site iterator
 
 **function**: [`sites`](@ref)
@@ -18,11 +20,11 @@ region/lattice.
 
 #### Surround iterator (Optional)
 
-**function**: `surround`
+**function**: [`surround`](@ref)
 
 #### Face iterator (Optional)
 
-**function**: `faces`
+**function**: [`faces`](@ref)
 
 ## Lattices
 

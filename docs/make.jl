@@ -16,5 +16,7 @@ deploydocs(
      repo = "github.com:Roger-luo/Lattices.jl.git",
      target = "build",
      julia = "1.0",
-     osname = "linux",
+     osname = "osx",
+     deps = nothing,
+     make = nothing
 )
