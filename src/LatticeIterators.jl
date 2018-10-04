@@ -1,4 +1,4 @@
-export sites, edges
+export sites, edges, surround, faces
 
 # This file defines the interface of a lattice iterator
 # All lattice iterators are duck-typed
@@ -16,3 +16,21 @@ function sites end
 Returns an iterator for all edges of `length` on the lattice.
 """
 function edges end
+
+"""
+    surround(lattice) -> iterator
+
+Returns an iterator of surroundings of all sites.
+
+    surround(lattice, site) -> iterator
+
+Returns an iterator of surrounding sites of given `site`.
+"""
+function surround end
+
+"""
+    faces(lattice) -> iterator
+
+Returns an iterator of all faces.
+"""
+function faces end

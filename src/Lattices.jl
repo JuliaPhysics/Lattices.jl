@@ -1,5 +1,7 @@
 module Lattices
 
+using Reexport
+
 include("utils.jl")
 
 include("BoundaryConditions.jl")
@@ -13,7 +15,6 @@ include("LatticeIterators.jl")
 
 # Implementations
 include("Chain.jl")
-include("Square.jl")
-
+include("square/Square.jl")
 
 end # module

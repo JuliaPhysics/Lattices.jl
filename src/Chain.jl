@@ -1,4 +1,8 @@
+@reexport module ChainLattice
 export Chain
+
+using Lattices: BoundaryCondition, BoundedLattice, Fixed, Periodic
+import Lattices
 
 """
     Chain{L, BC} <: AbstractLattice
@@ -15,21 +19,21 @@ by default.
 """
 Chain(len::Int; boundary=Periodic) = Chain{len, boundary}()
 
-size(::Chain{L}) where L = (L, )
-length(::Chain{L}) where L = L
-nameof(::Chain) = "Chain Lattice"
+Base.size(::Chain{L}) where L = (L, )
+Base.length(::Chain{L}) where L = L
+Base.nameof(::Chain) = "Chain Lattice"
 
 # NOTE: OneTo is faster than 1:L
-sites(::Chain{L}) where L = Base.OneTo(L)
-edges(::Chain{L, BC}; length::Int=1) where {L, BC} = ChainEdgesIterator{L, length, BC}()
+Lattices.sites(::Chain{L}) where L = Base.OneTo(L)
+Lattices.edges(::Chain{L, BC}; length::Int=1) where {L, BC} = EdgesIterator{L, length, BC}()
 
-struct ChainEdgesIterator{L, order, BC} end
+struct EdgesIterator{L, order, BC} end
 
-Base.eltype(::ChainEdgesIterator) = Tuple{Int, Int}
-Base.length(::ChainEdgesIterator{L, O, Periodic}) where {L, O} = L
-Base.length(::ChainEdgesIterator{L, O, Fixed}) where {L, O} = L - O
+Base.eltype(::EdgesIterator) = Tuple{Int, Int}
+Base.length(::EdgesIterator{L, O, Periodic}) where {L, O} = L
+Base.length(::EdgesIterator{L, O, Fixed}) where {L, O} = L - O
 
-function Base.iterate(::ChainEdgesIterator{L, O, Fixed}, state=1) where {L, O}
+function Base.iterate(::EdgesIterator{L, O, Fixed}, state=1) where {L, O}
     if state > L - O
         return nothing
     end
@@ -37,7 +41,7 @@ function Base.iterate(::ChainEdgesIterator{L, O, Fixed}, state=1) where {L, O}
     (state, state + O), state + 1
 end
 
-function Base.iterate(::ChainEdgesIterator{L, O, Periodic}, state=1) where {L, O}
+function Base.iterate(::EdgesIterator{L, O, Periodic}, state=1) where {L, O}
     if state > L
         return nothing
     end
@@ -52,3 +56,5 @@ Base.getindex(ltc::Chain{L, Periodic}, x::Int) where L = mod1(x, L)
 
 (ltc::Chain{L, Fixed})(x::Int) where L = 1 <= x <= L ? x : throw(BoundsError(ltc, x))
 (ltc::Chain{L, Periodic})(x::Int) where L = mod1(x, L)
+
+end
