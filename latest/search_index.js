@@ -73,22 +73,6 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "#Lattices.Chain",
-    "page": "Introduction",
-    "title": "Lattices.Chain",
-    "category": "type",
-    "text": "Chain{L, BC} <: AbstractLattice\n\nChain lattice. L is the length of this chain, and BC is the boundary condition.\n\n\n\n\n\n"
-},
-
-{
-    "location": "#Lattices.Chain-Tuple{Int64}",
-    "page": "Introduction",
-    "title": "Lattices.Chain",
-    "category": "method",
-    "text": "Chain(length; [boundary=Periodic])\n\nReturns a chain lattice with given length, the boundary is set to Periodic by default.\n\n\n\n\n\n"
-},
-
-{
     "location": "#Lattices.Fixed",
     "page": "Introduction",
     "title": "Lattices.Fixed",
@@ -102,22 +86,6 @@ var documenterSearchIndex = {"docs": [
     "title": "Lattices.Periodic",
     "category": "type",
     "text": "Periodic <: BoundaryCondition\n\nPeriodic boundary condition.\n\n\n\n\n\n"
-},
-
-{
-    "location": "#Lattices.Square",
-    "page": "Introduction",
-    "title": "Lattices.Square",
-    "category": "type",
-    "text": "Square{Shape, BC} <: BoundedLattice{2, BC}\n\nSquare lattice.\n\n\n\n\n\n"
-},
-
-{
-    "location": "#Lattices.Square-Tuple{Int64,Int64}",
-    "page": "Introduction",
-    "title": "Lattices.Square",
-    "category": "method",
-    "text": "Square(height, width; [boundary=Periodic])\n\nReturns a square lattice with given height and width, boundary is set to Periodic by default.\n\n\n\n\n\n"
 },
 
 {
@@ -137,6 +105,14 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "#Lattices.faces",
+    "page": "Introduction",
+    "title": "Lattices.faces",
+    "category": "function",
+    "text": "faces(lattice) -> iterator\n\nReturns an iterator of all faces.\n\n\n\n\n\n"
+},
+
+{
     "location": "#Lattices.isperiodic",
     "page": "Introduction",
     "title": "Lattices.isperiodic",
@@ -153,6 +129,14 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "#Lattices.surround",
+    "page": "Introduction",
+    "title": "Lattices.surround",
+    "category": "function",
+    "text": "surround(lattice) -> iterator\n\nReturns an iterator of surroundings of all sites.\n\nsurround(lattice, site) -> iterator\n\nReturns an iterator of surrounding sites of given site.\n\n\n\n\n\n"
+},
+
+{
     "location": "#Lattices.AbstractLattice",
     "page": "Introduction",
     "title": "Lattices.AbstractLattice",
@@ -166,14 +150,6 @@ var documenterSearchIndex = {"docs": [
     "title": "Lattices.BoundaryCondition",
     "category": "type",
     "text": "BoundaryCondition\n\nBoundary conditions for lattices. There usually has two:\n\n- Fixed boundary\n- Periodic boundary\n\nRef: https://nanohub.org/resources/7577/download/MartiniL5BoundaryConditions.pdf\n\n\n\n\n\n"
-},
-
-{
-    "location": "#Lattices.SquareEdgesIterator",
-    "page": "Introduction",
-    "title": "Lattices.SquareEdgesIterator",
-    "category": "type",
-    "text": "SquareEdgesIterator{Region, Order, LT}\n\niterate through order-th edge in Region on square lattide LT.\n\n\n\n\n\n"
 },
 
 {
