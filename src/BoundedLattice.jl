@@ -36,7 +36,7 @@ nameof(::BoundedLattice) = "Bounded Lattice"
 
 function show(io::IO, lattice::BoundedLattice)
     align = get(io, :align, 0)
-    println(io, " " * align, nameof(lattice))
-    println(io, " " * align, "boundary: ", boundary(lattice))
-    println(io, " " * align, "size:     ", size(lattice))
+    println(io, " " ^ align, nameof(lattice))
+    println(io, " " ^ align, "boundary: ", boundary(lattice))
+    println(io, " " ^ align, "size:     ", size(lattice))
 end
