@@ -19,9 +19,14 @@ struct FusedEdgesIterator{T <: Tuple}
 end
 
 FusedEdgesIterator(its...) = FusedEdgesIterator(its)
+Base.size(it::FusedEdgesIterator) = map(length, it.its)
 
 Base.eltype(::FusedEdgesIterator) = EdgeType
 Base.length(it::FusedEdgesIterator) = sum(length, it.its)
+
+# Generates the coupling
+Base.rand(::Type{T}, it::FusedEdgesIterator) where T = rand(T, size(it))
+Base.rand(it::FusedEdgesIterator) = rand(Float64, it)
 
 function Base.iterate(it::FusedEdgesIterator, state=((1, 1, 1), 1))
     it_state, nit = state
