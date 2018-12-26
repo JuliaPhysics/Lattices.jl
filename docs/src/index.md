@@ -26,6 +26,10 @@ region/lattice.
 
 **function**: [`faces`](@ref)
 
+#### Neighbor sites iterator (Optional)
+
+**function** [`neighbors`](@ref)
+
 ## Lattices
 
 ```@autodocs

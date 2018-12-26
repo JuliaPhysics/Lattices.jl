@@ -1,4 +1,4 @@
-export sites, edges, surround, faces
+export sites, edges, surround, faces, neighbors
 
 # This file defines the interface of a lattice iterator
 # All lattice iterators are duck-typed
@@ -34,3 +34,10 @@ function surround end
 Returns an iterator of all faces.
 """
 function faces end
+
+"""
+    neighbors(lattice, s; length=1) -> iterator
+
+Returns an iterator of the surrounding sites of given site `s`.
+"""
+function neighbors end

@@ -24,7 +24,9 @@ ndims(::AbstractLattice{N}) where N = N
 
 Returns the size of this `lattice`.
 """
-function size end
+function size(::AbstractLattice)
+    error("Not Implemented")
+end
 
 """
     name(lattice) -> String
@@ -39,4 +41,6 @@ nameof(ltc::AbstractLattice) = "Abstract Lattice"
 Returns the length of this lattice, or the production
 of each dimension size.
 """
-function length end
+function length(::AbstractLattice)
+    error("Not Implemented")
+end

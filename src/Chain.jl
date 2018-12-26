@@ -29,6 +29,7 @@ Lattices.edges(::Chain{L, BC}; length::Int=1) where {L, BC} = EdgesIterator{L, l
 
 struct EdgesIterator{L, order, BC} end
 
+Base.size(it::EdgesIterator) = (length(it), )
 Base.eltype(::EdgesIterator) = Tuple{Int, Int}
 Base.length(::EdgesIterator{L, O, Periodic}) where {L, O} = L
 Base.length(::EdgesIterator{L, O, Fixed}) where {L, O} = L - O

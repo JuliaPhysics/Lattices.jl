@@ -42,6 +42,8 @@ julia> for (a, b) in edges(l, length=2)
 
 ## TODO
 
+- [ ] Site Type
+
 - [ ] Hexagonel Lattice
 - [ ] Triangular Lattice
 

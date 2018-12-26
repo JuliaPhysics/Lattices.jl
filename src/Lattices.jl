@@ -16,5 +16,6 @@ include("LatticeIterators.jl")
 # Implementations
 include("Chain.jl")
 include("square/Square.jl")
+include("hyperrect.jl")
 
 end # module

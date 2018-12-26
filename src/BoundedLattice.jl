@@ -35,8 +35,8 @@ boundary(::T) where {T <: BoundedLattice} = boundary(T)
 nameof(::BoundedLattice) = "Bounded Lattice"
 
 function show(io::IO, lattice::BoundedLattice)
-    align = get(io, :align, 0)
-    println(io, " " ^ align, nameof(lattice))
-    println(io, " " ^ align, "boundary: ", boundary(lattice))
-    println(io, " " ^ align, "size:     ", size(lattice))
+    indent = get(io, :indent, 0)
+    println(io, " " ^ indent, nameof(lattice))
+    println(io, " " ^ indent, "boundary: ", boundary(lattice))
+    print(io, " " ^ indent, "size:     ", size(lattice))
 end
