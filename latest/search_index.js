@@ -65,6 +65,14 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "#Neighbor-sites-iterator-(Optional)-1",
+    "page": "Introduction",
+    "title": "Neighbor sites iterator (Optional)",
+    "category": "section",
+    "text": "function neighbors"
+},
+
+{
     "location": "#Lattices.BoundedLattice",
     "page": "Introduction",
     "title": "Lattices.BoundedLattice",
@@ -78,6 +86,14 @@ var documenterSearchIndex = {"docs": [
     "title": "Lattices.Fixed",
     "category": "type",
     "text": "Fixed <: BoundaryCondition\n\nFixed boundary condition.\n\n\n\n\n\n"
+},
+
+{
+    "location": "#Lattices.HyperRect",
+    "page": "Introduction",
+    "title": "Lattices.HyperRect",
+    "category": "type",
+    "text": "HyperRect{N, Shape, BC} <: BoundedLattice{N, BC}\n\nHyper Rectangle lattice on N dimension with size Shape.\n\n\n\n\n\n"
 },
 
 {
@@ -121,6 +137,14 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "#Lattices.neighbors",
+    "page": "Introduction",
+    "title": "Lattices.neighbors",
+    "category": "function",
+    "text": "neighbors(lattice, s; length=1) -> iterator\n\nReturns an iterator of the surrounding sites of given site s.\n\n\n\n\n\n"
+},
+
+{
     "location": "#Lattices.sites",
     "page": "Introduction",
     "title": "Lattices.sites",
@@ -153,10 +177,10 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "#Base.length",
+    "location": "#Base.length-Tuple{Lattices.AbstractLattice}",
     "page": "Introduction",
     "title": "Base.length",
-    "category": "function",
+    "category": "method",
     "text": "length(lattice) -> Int\n\nReturns the length of this lattice, or the production of each dimension size.\n\n\n\n\n\n"
 },
 
@@ -177,10 +201,10 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "#Base.size",
+    "location": "#Base.size-Tuple{Lattices.AbstractLattice}",
     "page": "Introduction",
     "title": "Base.size",
-    "category": "function",
+    "category": "method",
     "text": "size(lattice) -> Tuple\n\nReturns the size of this lattice.\n\n\n\n\n\n"
 },
 
