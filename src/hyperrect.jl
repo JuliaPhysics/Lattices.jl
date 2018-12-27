@@ -21,7 +21,7 @@ function edges(ltc::HyperRect; length=1)
     error("Not Implemented Yet")
 end
 
-function neighbors(::HyperRect{N, BC, Shape}, P::CartesianIndex; length=1) where {N, BC, Shape}
+function neighbors(::HyperRect{N, Periodic, Shape}, P::CartesianIndex; length=1) where {N, Shape}
     @boundscheck all(x->x>0, Tuple(P)) || error("Lattice configuration position starts from 1")
     hyper_rect_neighbors(P, Shape, Val(length))
 end
