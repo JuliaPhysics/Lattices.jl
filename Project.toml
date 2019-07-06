@@ -1,0 +1,16 @@
+name = "Lattices"
+uuid = "c21dee59-005f-55b6-acfd-94526b082a96"
+authors = ["Roger-luo"]
+version = "0.2.1"
+
+[deps]
+Reexport = "189a3867-3050-52da-a836-e630ba90ab69"
+
+[compat]
+julia = "1"
+
+[extras]
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+
+[targets]
+test = ["Test"]

@@ -15,4 +15,3 @@ _*.dat
 __pycache__/
 
 Manifest.toml
-Project.toml
