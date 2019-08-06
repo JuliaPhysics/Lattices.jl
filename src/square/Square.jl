@@ -25,6 +25,12 @@ Returns a square lattice with given `height` and `width`, `boundary` is set to `
 by default.
 """
 Square(height::Int, width::Int; boundary=Periodic) = Square{Tuple{height, width}, boundary}()
+"""
+    Square(extent; [boundary=Periodic])
+
+Returns a square lattice with height and width set to `extent`.
+"""
+Square(extent::Int; boundary=Periodic) = Square{Tuple{extent, extent}, boundary}()
 
 Base.size(::Square{Tuple{height, width}}) where {height, width} = (height, width)
 Base.length(::Square{Tuple{height, width}}) where {height, width} = height * width
