@@ -117,7 +117,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Introduction",
     "title": "Lattices.edges",
     "category": "function",
-    "text": "edges(lattice; [length=1]) -> iterator\n\nReturns an iterator for all edges of length on the lattice.\n\n\n\n\n\n"
+    "text": "edges(lattice; [order=1]) -> iterator\n\nReturns an iterator for all edges of the lattice of a given order. For example, order = 1 means nearest neighbor edges and order = 2 means next-nearest neighbors edges.\n\n\n\n\n\n"
 },
 
 {
@@ -141,7 +141,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Introduction",
     "title": "Lattices.neighbors",
     "category": "function",
-    "text": "neighbors(lattice, s; length=1) -> iterator\n\nReturns an iterator of the surrounding sites of given site s.\n\n\n\n\n\n"
+    "text": "neighbors(lattice, s; order=1) -> iterator\n\nReturns an iterator of the surrounding sites of given site s.\n\n\n\n\n\n"
 },
 
 {
