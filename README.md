@@ -30,7 +30,7 @@ each = 2
 each = 3
 each = 4
 
-julia> for (a, b) in edges(l, length=2)
+julia> for (a, b) in edges(l, order=2)
           # do something on edges
 
           println("this is point a: ", a)
