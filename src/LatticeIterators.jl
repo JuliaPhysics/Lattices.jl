@@ -38,7 +38,7 @@ Returns an iterator of all faces.
 function faces end
 
 """
-    neighbors(lattice, s; length=1) -> iterator
+    neighbors(lattice, s; order=1) -> iterator
 
 Returns an iterator of the surrounding sites of given site `s`.
 """
