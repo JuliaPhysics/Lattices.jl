@@ -25,7 +25,7 @@ Base.nameof(::Chain) = "Chain Lattice"
 
 # NOTE: OneTo is faster than 1:L
 Lattices.sites(::Chain{L}) where L = Base.OneTo(L)
-Lattices.edges(::Chain{L, BC}; length::Int=1) where {L, BC} = EdgesIterator{L, length, BC}()
+Lattices.edges(::Chain{L, BC}; order::Int=1) where {L, BC} = EdgesIterator{L, order, BC}()
 
 struct EdgesIterator{L, order, BC} end
 
