@@ -11,9 +11,11 @@ Returns an iterator for all sites on the lattice.
 function sites end
 
 """
-    edges(lattice; [length=1]) -> iterator
+    edges(lattice; [order=1]) -> iterator
 
-Returns an iterator for all edges of `length` on the lattice.
+Returns an iterator for all edges of the lattice of a given `order`.
+For example, `order = 1` means nearest neighbor edges and `order = 2`
+means next-nearest neighbors edges.
 """
 function edges end
 
@@ -36,7 +38,7 @@ Returns an iterator of all faces.
 function faces end
 
 """
-    neighbors(lattice, s; length=1) -> iterator
+    neighbors(lattice, s; order=1) -> iterator
 
 Returns an iterator of the surrounding sites of given site `s`.
 """

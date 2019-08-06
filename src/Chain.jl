@@ -25,7 +25,7 @@ Base.nameof(::Chain) = "Chain Lattice"
 
 # NOTE: OneTo is faster than 1:L
 Lattices.sites(::Chain{L}) where L = Base.OneTo(L)
-Lattices.edges(::Chain{L, BC}; length::Int=1) where {L, BC} = EdgesIterator{L, length, BC}()
+Lattices.edges(::Chain{L, BC}; order::Int=1) where {L, BC} = EdgesIterator{L, order, BC}()
 
 struct EdgesIterator{L, order, BC} end
 
@@ -56,5 +56,21 @@ Base.getindex(ltc::Chain{L, Fixed}, x::Int) where L = 1 <= x <= L ? x : throw(Bo
 Base.getindex(ltc::Chain{L, Periodic}, x::Int) where L = mod1(x, L)
 
 (ltc::Chain{L, B})(x::Int) where {L,B} = getindex(ltc, x)
+
+Lattices.neighbors(ltc::Chain{L, Periodic}, s::Int; order=1) where L = (ltc(s+order), ltc(s-order))
+
+# OPT: Can we do something about the type instability here?
+function Lattices.neighbors(ltc::Chain{L, Fixed}, s::Int; order=1) where L
+    sp, sm = s+order, s-order
+    if sp > L && sm < 1
+        return (nothing, nothing)
+    elseif sp > L && sm >= 1
+        return (nothing, sm)
+    elseif sp <= L && sm < 1
+        return (sp, nothing)
+    else
+        return (sp, sm)
+    end
+end
 
 end

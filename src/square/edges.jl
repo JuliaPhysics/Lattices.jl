@@ -1,12 +1,12 @@
-function Lattices.edges(lattice::Square; length::Int=1)
-    if isodd(length)
-        k = (length + 1) ÷ 2
+function Lattices.edges(lattice::Square; order::Int=1)
+    if isodd(order)
+        k = (order + 1) ÷ 2
         FusedEdgesIterator(
             EdgesIterator{:vertical, k}(lattice),
             EdgesIterator{:horizontal, k}(lattice)
         )
     else
-        k = length ÷ 2
+        k = order ÷ 2
         FusedEdgesIterator(
             EdgesIterator{:upright, k}(lattice),
             EdgesIterator{:upleft, k}(lattice)

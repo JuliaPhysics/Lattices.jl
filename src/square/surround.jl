@@ -2,7 +2,7 @@ struct SurroundSiteIterator{Shape, BC, K}
     site::Tuple{Int, Int}
 end
 
-Lattices.surround(lattice::Square{S, BC}, site; length::Int=1) where {S, BC} = SurroundSiteIterator{S, BC, length}(site)
+Lattices.surround(lattice::Square{S, BC}, site; order::Int=1) where {S, BC} = SurroundSiteIterator{S, BC, order}(site)
 Base.eltype(::SurroundSiteIterator) = SiteType
 Base.length(::SurroundSiteIterator{<:Tuple, Periodic}) = 4
 

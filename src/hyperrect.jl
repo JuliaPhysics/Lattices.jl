@@ -17,11 +17,11 @@ function sites(ltc::HyperRect)
     Base.CartesianIndices((Base.OneTo(k + 1) for k in size(ltc))...)
 end
 
-function edges(ltc::HyperRect; length=1)
+function edges(ltc::HyperRect; order=1)
     error("Not Implemented Yet")
 end
 
-function neighbors(::HyperRect{N, Periodic, Shape}, P::CartesianIndex; length=1) where {N, Shape}
+function neighbors(::HyperRect{N, Periodic, Shape}, P::CartesianIndex; order=1) where {N, Shape}
     @boundscheck all(x->x>0, Tuple(P)) || error("Lattice configuration position starts from 1")
     hyper_rect_neighbors(P, Shape, Val(length))
 end

@@ -6,8 +6,6 @@ A library for defining lattices in Julia.
 
 ## Install
 
-**NOTE**: only supports Julia v1.0+.
-
 ```
 pkg> add Lattices
 ```
@@ -30,13 +28,13 @@ each = 2
 each = 3                            
 each = 4                            
                                     
-julia> for (from, to) in edges(l)   
-           println(from, " -> ", to)
+julia> for (a, b) in edges(l)   
+           println(a, " <-> ", b)
        end                          
-1 -> 2                              
-2 -> 3                              
-3 -> 4                              
-4 -> 1                              
+1 <-> 2                              
+2 <-> 3                              
+3 <-> 4                              
+4 <-> 1                              
 ```
 
 ## TODO
