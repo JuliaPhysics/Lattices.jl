@@ -58,4 +58,20 @@ Base.getindex(ltc::Chain{L, Periodic}, x::Int) where L = mod1(x, L)
 (ltc::Chain{L, Fixed})(x::Int) where L = 1 <= x <= L ? x : throw(BoundsError(ltc, x))
 (ltc::Chain{L, Periodic})(x::Int) where L = mod1(x, L)
 
+Lattices.neighbors(ltc::Chain{L, Periodic}, s::Int; length=1) where L = (ltc(s+length), ltc(s-length))
+
+# OPT: Can we do something about the type instability here?
+function Lattices.neighbors(ltc::Chain{L, Fixed}, s::Int; length=1) where L
+    sp, sm = s+length, s-length
+    if sp > L && sm < 1
+        return (nothing, nothing)
+    elseif sp > L && sm >= 1
+        return (nothing, sm)
+    elseif sp <= L && sm < 1
+        return (sp, nothing)
+    else
+        return (sp, sm)
+    end
+end
+
 end
