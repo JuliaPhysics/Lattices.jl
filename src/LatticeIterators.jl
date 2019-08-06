@@ -14,8 +14,8 @@ function sites end
     edges(lattice; [order=1]) -> iterator
 
 Returns an iterator for all edges of the lattice of a given `order`.
-For example, `order = 1` means nearest neighbors and `order = 2`
-means next-nearest neighbors.
+For example, `order = 1` means nearest neighbor edges and `order = 2`
+means next-nearest neighbors edges.
 """
 function edges end
 
