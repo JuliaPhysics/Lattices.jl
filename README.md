@@ -6,8 +6,6 @@ A library for defining lattices in Julia.
 
 ## Install
 
-**NOTE**: only supports Julia v1.0+.
-
 ```
 pkg> add Lattices
 ```
