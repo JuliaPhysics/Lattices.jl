@@ -1,4 +1,4 @@
-# Lattice.jl
+# Lattices.jl
 
 [![Build Status](https://travis-ci.org/Roger-luo/Lattices.jl.svg?branch=master)](https://travis-ci.org/Roger-luo/Lattices.jl)
 
