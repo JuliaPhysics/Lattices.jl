@@ -1,4 +1,4 @@
-function Lattices.edges(lattice::Square; order::Int=1)
+function edges(lattice::Square; order::Int=1)
     if isodd(order)
         k = (order + 1) ÷ 2
         FusedEdgesIterator(

@@ -10,7 +10,7 @@ end
 
 HyperRect(shape::Int...; boundary=Periodic) = HyperRect(shape; boundary=boundary)
 HyperRect(shape::NTuple{N, Int}; boundary=Periodic) where N = HyperRect{N, boundary, Tuple{shape...}}()
-nameof(::HyperRect{N}) where N = "HyperRect{$N}"
+Base.nameof(::HyperRect{N}) where N = "HyperRect{$N}"
 Base.@pure Base.size(::HyperRect{N, BC, Shape}) where {N, BC, Shape} = tuple(Shape.parameters...)
 
 function sites(ltc::HyperRect)

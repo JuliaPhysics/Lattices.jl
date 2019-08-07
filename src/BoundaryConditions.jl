@@ -3,7 +3,7 @@ export Periodic, Fixed
 """
     BoundaryCondition
 
-Boundary conditions for lattices. There usually has two:
+Boundary conditions for lattices. It usually has two:
 
     - Fixed boundary
     - Periodic boundary

@@ -20,17 +20,6 @@ means next-nearest neighbors edges.
 function edges end
 
 """
-    surround(lattice) -> iterator
-
-Returns an iterator of surroundings of all sites.
-
-    surround(lattice, site) -> iterator
-
-Returns an iterator of surrounding sites of given `site`.
-"""
-function surround end
-
-"""
     faces(lattice) -> iterator
 
 Returns an iterator of all faces.

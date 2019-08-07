@@ -6,16 +6,14 @@ include("utils.jl")
 
 include("BoundaryConditions.jl")
 
-# Basic Interface
-include("AbstractLattice.jl")
-include("BoundedLattice.jl")
+# Interface
+include("base.jl")
 
-# Lattice Iterator Interface
-include("LatticeIterators.jl")
+include("chain2.jl")
 
 # Implementations
-include("Chain.jl")
-include("square/Square.jl")
-include("hyperrect.jl")
+# include("Chain.jl")
+# include("square/Square.jl")
+# include("hyperrect.jl")
 
 end # module

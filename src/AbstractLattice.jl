@@ -1,5 +1,3 @@
-import Base: size, ndims, length, show, nameof
-
 """
     AbstractLattice{N}
 
@@ -17,14 +15,14 @@ abstract type AbstractLattice{N} end
 
 Returns number of dimensions of the lattice.
 """
-ndims(::AbstractLattice{N}) where N = N
+Base.ndims(::AbstractLattice{N}) where N = N
 
 """
     size(lattice) -> Tuple
 
 Returns the size of this `lattice`.
 """
-function size(::AbstractLattice)
+function Base.size(::AbstractLattice)
     error("Not Implemented")
 end
 
@@ -33,7 +31,7 @@ end
 
 Returns the name of this lattice.
 """
-nameof(ltc::AbstractLattice) = "Abstract Lattice"
+Base.nameof(ltc::AbstractLattice) = "Abstract Lattice"
 
 """
     length(lattice) -> Int
@@ -41,6 +39,12 @@ nameof(ltc::AbstractLattice) = "Abstract Lattice"
 Returns the length of this lattice, or the production
 of each dimension size.
 """
-function length(::AbstractLattice)
+function Base.length(::AbstractLattice)
     error("Not Implemented")
 end
+
+
+abstract type SiteType end
+abstract type EdgeType end
+
+EdgeType(::Type{LTC}) where LTC = Tuple{SiteType(LTC), SiteType(LTC)}

@@ -32,9 +32,9 @@ isperiodic(::Type{<:BoundedLattice}) = false
 isperiodic(::T) where {T <: BoundedLattice} = isperiodic(T)
 boundary(::T) where {T <: BoundedLattice} = boundary(T)
 
-nameof(::BoundedLattice) = "Bounded Lattice"
+Base.nameof(::BoundedLattice) = "Bounded Lattice"
 
-function show(io::IO, lattice::BoundedLattice)
+function Base.show(io::IO, lattice::BoundedLattice)
     indent = get(io, :indent, 0)
     println(io, " " ^ indent, nameof(lattice))
     println(io, " " ^ indent, "boundary: ", boundary(lattice))

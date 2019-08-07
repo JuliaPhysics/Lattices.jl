@@ -7,7 +7,7 @@ end
 
 import Base: +
 addone(x::LessEqual{L}) where L = x.val == L ? LessEqual{L}(1) : LessEqual{L}(x + 1)
-+(lhs::LessEqual{L}, rhs::Integer) where L = rhs == 1 ? addone(lhs) : LessEqual{L}(lhs.val + rhs)
+Base.:(+)(lhs::LessEqual{L}, rhs::Integer) where L = rhs == 1 ? addone(lhs) : LessEqual{L}(lhs.val + rhs)
 
 """
     fastmod1(::Val{X}, ::Val{Y})
