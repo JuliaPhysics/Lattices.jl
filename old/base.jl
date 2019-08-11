@@ -9,7 +9,28 @@ For a more concrete definition please refer the following material:
 - Lattice Graph: https://en.wikipedia.org/wiki/Lattice_graph
 """
 abstract type AbstractLattice{N} end
-abstract type AbstractUnitCell{N} end
+
+struct SiteIterator{L <: AbstractLattice}
+    lattice::L
+end
+
+"""
+    EdgeIterator{O, L}
+
+Edge iterator for lattice type `L` with order `O`.
+"""
+struct EdgeIterator{O, L <: AbstractLattice}
+    lattice::L
+end
+
+"""
+    NeighborIterator{O, L}
+
+Neighbor iterator for lattice type `L` with order `O`.
+"""
+struct NeighborIterator{O, L <: AbstractLattice}
+    lattice::L
+end
 
 # SiteType/EdgeType are defined as holy traits
 abstract type SiteType end
@@ -55,22 +76,6 @@ Returns an iterator of the surrounding sites of given site `s`.
 """
 function neighbors end
 
-
-struct SiteIt{L}
-    lattice::L
-end
-
-struct EdgeIt{L}
-    lattice::L
-end
-
-struct FaceIt{L}
-    lattice::L
-end
-
-struct NeighborIt{L}
-    lattice::L
-end
 
 # boundary interface
 
