@@ -1,6 +1,7 @@
 # Lattices.jl
 
 [![Build Status](https://travis-ci.org/JuliaPhysics/Lattices.jl.svg?branch=master)](https://travis-ci.org/JuliaPhysics/Lattices.jl)
+![lifecycle](https://img.shields.io/badge/lifecycle-experimental-orange.svg)
 
 A library for defining lattices in Julia.
 
