@@ -1,7 +1,11 @@
 # Lattices.jl
 
-[![Build Status](https://travis-ci.org/JuliaPhysics/Lattices.jl.svg?branch=master)](https://travis-ci.org/JuliaPhysics/Lattices.jl)
+[![](https://img.shields.io/badge/docs-latest-blue.svg)](https://juliaphysics.github.io/Lattices.jl)
+[![travis][travis-img]](https://travis-ci.org/JuliaPhysics/Lattices.jl)
+[![license: MIT](https://img.shields.io/badge/License-MIT-red.svg)](https://opensource.org/licenses/MIT)
 ![lifecycle](https://img.shields.io/badge/lifecycle-experimental-orange.svg)
+
+[travis-img]: https://img.shields.io/travis/JuliaPhysics/Lattices.jl/master.svg?label=Linux%20/%20MacOS
 
 A library for defining lattices in Julia.
 
