@@ -4,6 +4,8 @@
 
 A library for defining lattices in Julia.
 
+**Warning**: This package is still at very early stage for exploring a potential Julian interface for lattices. Take your own risk of using the package, and please feel free to join the discussions in the issues and PRs.
+
 ## Install
 
 ```
