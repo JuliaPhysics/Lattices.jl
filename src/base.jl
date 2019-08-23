@@ -55,25 +55,39 @@ Returns an iterator of the surrounding sites of given site `s`.
 """
 function neighbors end
 
+abstract type LatticeIterator{L} end
+cell(x::LatticeIterator) = cell(x.lattice)
+shape(x::LatticeIterator) = shape(x.lattice)
+shape(x::LatticeIterator, k) = shape(x.lattice, k)
 
-struct SiteIt{L}
+
+struct SiteIt{L} <: LatticeIterator{L}
     lattice::L
 end
 
-struct EdgeIt{L}
+sites(l) = SiteIt(l)
+Base.show(io::IO, x::SiteIt) = print(io, "sites(", x.lattice, ")")
+SiteType(x) = eltype(sites(x)) # fallback to site iterator by default
+
+struct EdgeIt{L} <: LatticeIterator{L}
+    lattice::L
+    distance::Int
+end
+
+edges(l; distance=1) = EdgeIt(l, distance)
+Base.show(io::IO, x::EdgeIt) = print(io, "edges(", x.lattice, ", distance=", x.distance, ")")
+
+struct FaceIt{L} <: LatticeIterator{L}
     lattice::L
 end
 
-struct FaceIt{L}
+struct NeighborIt{L} <: LatticeIterator{L}
     lattice::L
-end
-
-struct NeighborIt{L}
-    lattice::L
+    distance::Int
 end
 
 # boundary interface
-
+export Periodic, Open
 ## boundary types are implemented as traits
 """
     BoundaryCond
