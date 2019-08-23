@@ -157,7 +157,7 @@ function Base.iterate(it::EdgesIterator{:upright, K, PeriodicSquare{h, w}}, stat
     elseif i < h
         return ((1, j+1), (K%h+1, (j+K)%w+1)), (2, j+1, count+1)
     else
-        ((i, j), (i+K-1)%h+1, (j+K-1)%w+1), (i+1, j, count+1)
+        ((i, j), ((i+K-1)%h+1, (j+K-1)%w+1)), (i+1, j, count+1)
     end
 end
 
