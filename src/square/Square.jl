@@ -37,12 +37,10 @@ Base.length(::Square{Tuple{height, width}}) where {height, width} = height * wid
 Base.nameof(::Square) = "Square Lattice"
 
 Base.getindex(lattice::Square, inds::Int...) = getindex(lattice, inds)
-Base.getindex(lattice::FixedSquare{h, w}, inds::NTuple{2, Int}) where h where w =
+Base.getindex(lattice::Square{Tuple{h, w}}, inds::NTuple{2, Int}) where h where w =
     inds[1] > h ? throw(BoundsError(lattice, inds)) :
     inds[2] > w ? throw(BoundsError(lattice, inds)) :
     inds[1] + (inds[2] - 1) * h
-Base.getindex(lattice::PeriodicSquare{h, w}, inds::NTuple{2, Int}) where h where w =
-    mod1(inds[1], h) + mod(inds[2] - 1, w) * h
 
 (ltc::FixedSquare{h, w})(s::Int) where {h, w} =
     s > length(ltc) || s < 1 ? throw(BoundsError(ltc, s)) :

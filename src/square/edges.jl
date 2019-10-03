@@ -154,19 +154,19 @@ function Base.iterate(it::EdgesIterator{:upright, K, PeriodicSquare{h, w}}, stat
     i, j, count = state
     if count > length(it)
         return nothing
-    elseif i < h
-        return ((1, j+1), (K%h+1, (j+K)%w+1)), (2, j+1, count+1)
+    elseif i > h
+        return ((1, j+1), (mod1(K, h), mod1(j+K, w))), (1, j+1, count+1)
     else
-        ((i, j), ((i+K-1)%h+1, (j+K-1)%w+1)), (i+1, j, count+1)
+        ((i, j), (mod1(i+K-1, h), mod1(j+K-1, w))), (i+1, j, count+1)
     end
 end
 
 function Base.iterate(it::EdgesIterator{:upleft, K, PeriodicSquare{h, w}}, state = (1, 1, 1)) where {K, h, w}
     i, j, count = state
     if count > length(it)
-    elseif i < h
-        return ((K%h+1, j+1), (1, (j+K)%w+1)), (2, j+1, count+1)
+    elseif i > h
+        return ((mod1(K, h), j+1), (1, mod1(j+K, w))), (2, j+1, count+1)
     else
-        (((i+K-1)%h+1, j), (i, (j+K-1)%w+1)), (i+1, j, count+1)
+        ((mod1(i+K-1, h), j), (i, mod1(j+K-1, w))), (i+1, j, count+1)
     end
 end
