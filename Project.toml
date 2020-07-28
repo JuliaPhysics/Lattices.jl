@@ -1,7 +1,7 @@
 name = "Lattices"
 uuid = "c21dee59-005f-55b6-acfd-94526b082a96"
 authors = ["Roger-luo"]
-version = "0.2.1"
+version = "0.2.2"
 
 [deps]
 Reexport = "189a3867-3050-52da-a836-e630ba90ab69"
