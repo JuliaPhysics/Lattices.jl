@@ -1,3 +1,5 @@
+module Lattices
+
 import Base: size, ndims, length, show, nameof
 
 """
@@ -42,6 +44,9 @@ struct GraphLattice{Graph} <: AbstractLattice
     graph::Graph
 end
 
+
+struct HasCoordinate end
+
 function coordinate(::HoneyComb, id)
 end
 
@@ -75,7 +80,8 @@ end
 function sites end
 function neighbors end
 function bonds end
-function coordinate(lattice, id) end
 
 Base.iterate(it::BondsIt, st) = iterate_lattice(it, it.lattice, st)
 function iterate_lattice(::BondsIt, lattice, st) end
+
+end
