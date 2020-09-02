@@ -1,4 +1,17 @@
+module Lattices
+
 import Base: size, ndims, length, show, nameof
+using Base.Iterators
+
+using StaticArrays
+
+export AbstractLattice, AbstractCoordinateLattice,
+        WeightedLattice, CoordinateLattice
+
+export HyperCubic, Chain, Square, SimpleCubic
+
+export AbstractBoundary, Periodic, Open, Helical, MixedBoundary
+
 
 """
     AbstractLattice{N}
@@ -11,45 +24,34 @@ For a more concrete definition please refer the following material:
 - Lattice Graph: https://en.wikipedia.org/wiki/Lattice_graph
 """
 abstract type AbstractLattice{N} end
+abstract type AbstractCoordinateLattice{N} <: AbstractLattice{N} end
+ndims(::AbstractLattice{N}) where N = N
 
-@enum Boundary begin
-    Periodict
-    Open
-    Helical # ignore if not hyperplane like
-end
 
-struct HyperPlane{N} <: AbstractLattice
-    dims::NTuple{N, Int}
-    boundaries::NTuple{N, Boundary}
-end
 
-struct WeightedLattice{L, W} <: AbstractLattice
+
+struct WeightedLattice{N, L, W} <: AbstractLattice{N}
     lattice::L
     weights::W
 end
 
-struct CoordinateLattice{L, Position}
+struct CoordinateLattice{N, L, Position} <: AbstractCoordinateLattice{N}
     lattice::L
     coordinates::Vector{Position}
 end
 
-struct HoneyComb
-    dims::NTuple{2, Int}
-    boundaries::NTuple{2, Boundary}
-end
+# struct GraphLattice{Graph} <: AbstractLattice
+#     graph::Graph
+# end
 
-struct GraphLattice{Graph} <: AbstractLattice
-    graph::Graph
-end
+# function coordinate(::HoneyComb, id)
+# end
 
-function coordinate(::HoneyComb, id)
-end
+# function coordinate(lattice, id)
+# end
 
-function coordinate(lattice, id)
-end
-
-function coordinate(::HasCoordinate, lattice, id)
-end
+# function coordinate(::HasCoordinate, lattice, id)
+# end
 
 # for (i, j) in edges(lattice; bond=k)
 # end
@@ -67,15 +69,29 @@ struct SitesIt{L}
     lattice::L
 end
 
-struct EdgesIt{L}
+struct EdgesIt{L, B}
     lattice::L
-    bond::Int
 end
 
-function sites end
-function neighbors end
-function edges end
-function coordinate(lattice, id) end
 
-Base.iterate(it::EdgesIt, st) = iterate_lattice(it, it.lattice, st)
-function iterate_lattice(::EdgesIt, lattice, st) end
+
+sites(lattice::L) where L <: AbstractLattice = SitesIt{L}(lattice)
+
+
+# neighbors(lattice::AbstractLattice{N}, site::NTuple{N, Int}, k::Val{K}) where {N, K}
+neighbors(lattice, site) = neighbors(lattice, site, Val{1})
+
+# function coordinate(lattice, id) end
+
+# function Base.iterate(it::EdgesIt, st=(sites(it.lattice),))
+
+
+# end
+
+
+
+include("boundaries.jl")
+include("hypercubic.jl")
+include("honeycomb.jl")
+
+end #module
