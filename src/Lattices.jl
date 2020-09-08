@@ -13,12 +13,11 @@ export HyperCubic, Chain, Square, SimpleCubic
 export AbstractBoundary, Periodic, Open, Helical, MixedBoundary
 
 
+export Coordinate
+
+include("coordinate.jl")
+include("types.jl")
 """
-    AbstractLattice{N}
-
-Abstract type for general lattices. `N` indicates the dimension.
-For a more concrete definition please refer the following material:
-
 - Lattice (group): https://en.wikipedia.org/wiki/Lattice_(group)
 - Lattice Model: https://en.wikipedia.org/wiki/Lattice_model_(physics)
 - Lattice Graph: https://en.wikipedia.org/wiki/Lattice_graph
