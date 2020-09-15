@@ -1,15 +1,13 @@
 abstract type AbstractBoundary end
-struct Periodic <: AbstractBoundary end
-struct Open <: AbstractBoundary end
+abstract type PrimitiveBoundary <: AbstractBoundary end
+struct Periodic <: PrimitiveBoundary end
+struct Open <: PrimitiveBoundary end
 
 # Helical BCs is a fast approximation to
 # Periodic BCs that takes advantage of the linear storage of
 # arrays. Those familiar with DMRG may recognize this as
 # the "snake" boundary condition.
-struct Helical <: AbstractBoundary end
-
-# non-mixed BCs
-const PrimitiveBoundary = Union{Periodic, Helical, Open}
+struct Helical <: PrimitiveBoundary end
 
 # Allows defining lattices with different BCs along each
 #  dimension. Should reject Helical BC as that is a "global" BC.
@@ -33,6 +31,7 @@ MixedBoundary(bcs::NTuple{N, Helical}) where N = Helical()
 # base case for no type params
 MixedBoundary(bcs::NTuple{N, AbstractBoundary}) where N = MixedBoundary{N}(bcs)
 
-
-MixedBoundary(bcs::Vector{AbstractBoundary}) = MixedBoundary(tuple(bcs...))
+MixedBoundary(bcs::Vector{<:AbstractBoundary}) = MixedBoundary(tuple(bcs...))
 MixedBoundary(bcs::AbstractBoundary...) = MixedBoundary(bcs)
+
+ndims(::MixedBoundary{N}) where N = N

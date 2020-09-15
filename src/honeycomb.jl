@@ -1,5 +1,5 @@
 
-struct HoneyComb <: AbstractCoordinateLattice{2}
+struct HoneyComb <: AbstractLattice
     dims::NTuple{2, Int}
     boundaries::NTuple{2, AbstractBoundary}
 end

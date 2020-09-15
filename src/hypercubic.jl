@@ -1,23 +1,33 @@
-struct HyperCubic{N, B<:AbstractBoundary} <: AbstractCoordinateLattice{N}
+struct HyperCubic{N, B<:AbstractBoundary} <: AbstractLattice
     dims::NTuple{N, Int}
     bc::B
+    function HyperCubic{N, B}(dims::NTuple{N, Int}, bc::B) where {N, B <: AbstractBoundary}
+        if bc isa MixedBoundary && !(bc isa MixedBoundary{N})
+            throw(ArgumentError("Given MixedBoundary should have same number of dimensions as the Lattice!"))
+        end
+        new{N, B}(dims, bc)
+    end
+
+    function HyperCubic{N, B}(dim::Int, bc::B) where {N, B <: AbstractBoundary}
+        new{N, B}(ntuple(x->dim, N), bc)
+    end
 end
 
-
 HyperCubic{N, B}(dims::NTuple{N, Int}) where {N, B <: PrimitiveBoundary} = HyperCubic{N, B}(dims, B())
+
 HyperCubic{N}(dims::NTuple{N, Int}, bc::B=Periodic()) where {N, B <: AbstractBoundary} = HyperCubic{N, B}(dims, bc)
 HyperCubic(dims::NTuple{N, Int}, bc::B=Periodic()) where {N, B <: AbstractBoundary} = HyperCubic{N, B}(dims, bc)
-HyperCubic{N, B}(dim::Int) where {N, B <: PrimitiveBoundary} = HyperCubic{N, B}(ntuple(x->dim, N), B())
-HyperCubic{N}(dim::Int, bc) where N = HyperCubic{N}(ntuple(x->dim, N), bc)
-HyperCubic{N}(dim::Int) where N = HyperCubic{N}(ntuple(x->dim, N))
 
-const Chain{B} = HyperCubic{1, B}
-const Square{B} = HyperCubic{2, B}
-const SimpleCubic{B} = HyperCubic{3, B}
+HyperCubic{N, B}(dim::Int) where {N, B <: AbstractBoundary} = HyperCubic{N, B}(dim, B())
+HyperCubic{N}(dim::Int, bc::B=Periodic()) where {N, B <: AbstractBoundary} = HyperCubic{N, B}(dim, bc)
+
+const Chain = HyperCubic{1}
+const Square = HyperCubic{2}
+const SimpleCubic = HyperCubic{3}
 
 _apply_bc(::Type{Periodic}, length, coord) = mod(coord, 1:length)
 _apply_bc(::Type{Open}, length, coord) = (1 <= coord <= length) ? coord : nothing
-_apply_bc(bc::SimpleBoundary, length, coord) = _apply_bc(typeof(bc), length, coord)
+_apply_bc(bc::AbstractBoundary, length, coord) = _apply_bc(typeof(bc), length, coord)
 
 
 function _apply_bcs(lattice::HyperCubic{N, Periodic}, site::SVector{N, Int})::SVector{N, Int} where N
