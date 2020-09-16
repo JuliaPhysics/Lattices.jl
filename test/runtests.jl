@@ -1,18 +1,14 @@
 using Test, Lattices
 
 @testset "Boundaries" begin
-    for T in [Periodic, Helical, Open]
-        @test MixedBoundary((T(),)) == T() == MixedBoundary(T())
-        @test MixedBoundary(T(), T()) == T()
-    end
+    @test Lattices.check_boundaries(Periodic(), Open()) == (Periodic(), Open())
+    @test Lattices.check_boundaries(Helical(), Helical()) == (Helical(), Helical())
 
-    @test MixedBoundary((Periodic(), Open())) == MixedBoundary([Periodic(), Open()]) == MixedBoundary(Periodic(), Open())
+    @test Lattices.check_boundaries((Periodic(), Open())) == (Periodic(), Open())
+    @test Lattices.check_boundaries((Helical(), Helical())) == (Helical(), Helical())
 
-    @test_throws ArgumentError MixedBoundary((Periodic(), Helical()))
-    @test_throws ArgumentError MixedBoundary(
-        MixedBoundary(Periodic(), Open()),
-        Open()
-    )
+    @test_throws ArgumentError Lattices.check_boundaries(Periodic(), Helical())
+
 end
 
 
@@ -20,41 +16,70 @@ end
 @testset "HyperCubic" begin
     @testset "Constructors" begin
         @testset "Chain Constructors" begin
-            @test HyperCubic{1, Periodic}(10) == Chain{Periodic}(10) == Chain(10)
-            @test HyperCubic{1, Periodic}(10) == Chain(10, Periodic())
-            @test HyperCubic{1, Open}(10) == Chain(10, Open()) == Chain{Open}(10)
-            @test HyperCubic{1, Helical}(10) == Chain(10, Helical()) == Chain{Helical}(10)
+            @test HyperCubic{1}((10,)) == HyperCubic((10,)) == Chain(10) == Chain(10, Periodic())
+
+            for B in [Periodic, Open, Helical]
+                @test HyperCubic{1}((10,), (B(),)) == HyperCubic{1}((10,), B()) == Chain(10, B()) == Chain(10, (B(),))
+                @test HyperCubic((10,), (B(),)) == HyperCubic((10,), B()) == Chain(10, B()) == Chain(10, (B(),))
+            end
         end
 
         @testset "Square Constructors" begin
-            @test HyperCubic{2, Periodic}((10,10)) == HyperCubic{2, Periodic}(10)
-            @test HyperCubic{2, Periodic}(10) == Square{Periodic}(10) == Square(10)
-            @test HyperCubic{2, Periodic}(10) == Square(10, Periodic())
-            @test HyperCubic{2, Open}(10) == Square(10, Open()) == Square{Open}(10)
-            @test HyperCubic{2, Helical}(10) == Square(10, Helical()) == Square{Helical}(10)
+            # test default BC
+            @test HyperCubic{2}((10, 5)) == Square((10, 5), Periodic()) == Square((10, 5))
 
-            @test HyperCubic{2, Periodic}((10, 5)) == Square{Periodic}((10, 5)) == Square((10, 5))
-            @test HyperCubic{2, Periodic}((10, 5)) == Square((10, 5), Periodic())
-            @test HyperCubic{2, Open}((10, 5)) == Square((10, 5), Open()) == Square{Open}((10, 5))
-            @test HyperCubic{2, Helical}((10, 5)) == Square((10, 5), Helical()) == Square{Helical}((10, 5))
+            for B1 in [Periodic, Open, Helical]
+                @test (
+                    HyperCubic{2}((10, 5), B1())
+                    == HyperCubic{2}((10, 5), (B1(), B1()))
+                    == HyperCubic((10, 5), B1())
+                    == HyperCubic((10, 5), (B1(), B1()))
+                    == Square((10, 5), B1())
+                    == Square((10, 5), (B1(), B1()))
+                )
+                if B1 != Helical
+                    for B2 in [Periodic, Open]
+                        @test (
+                            HyperCubic{2}((10, 5), (B1(), B2()))
+                            == HyperCubic((10, 5), (B1(), B2()))
+                            == Square((10, 5), (B1(), B2()))
+                        )
+                    end
+                    @test_throws ArgumentError Square((10, 5), (B1(), Helical()))
+                end
+            end
 
-            @test HyperCubic((10, 5), MixedBoundary(Periodic(), Open())) == Square((10, 5), MixedBoundary(Periodic(), Open()))
         end
 
 
         @testset "Cubic Constructors" begin
-            @test HyperCubic{3, Periodic}((10,10,10)) == HyperCubic{3, Periodic}(10)
-            @test HyperCubic{3, Periodic}(10) == Cubic{Periodic}(10) == Cubic(10)
-            @test HyperCubic{3, Periodic}(10) == Cubic(10, Periodic())
-            @test HyperCubic{3, Open}(10) == Cubic(10, Open()) == Cubic{Open}(10)
-            @test HyperCubic{3, Helical}(10) == Cubic(10, Helical()) == Cubic{Helical}(10)
+            # test default BC
+            @test HyperCubic{3}((10, 5, 7)) == Cubic((10, 5, 7), Periodic()) == Cubic((10, 5, 7))
 
-            @test HyperCubic{3, Periodic}((10, 5, 7)) == Cubic{Periodic}((10, 5, 7)) == Cubic((10, 5, 7))
-            @test HyperCubic{3, Periodic}((10, 5, 7)) == Cubic((10, 5, 7), Periodic())
-            @test HyperCubic{3, Open}((10, 5, 7)) == Cubic((10, 5, 7), Open()) == Cubic{Open}((10, 5, 7))
-            @test HyperCubic{3, Helical}((10, 5, 7)) == Cubic((10, 5, 7), Helical()) == Cubic{Helical}((10, 5, 7))
+            for B1 in [Periodic, Open, Helical]
+                @test (
+                    HyperCubic{3}((10, 5, 7), B1())
+                    == HyperCubic{3}((10, 5, 7), (B1(), B1(), B1()))
+                    == HyperCubic((10, 5, 7), B1())
+                    == HyperCubic((10, 5, 7), (B1(), B1(), B1()))
+                    == Cubic((10, 5, 7), B1())
+                    == Cubic((10, 5, 7), (B1(), B1(), B1()))
+                )
+                if B1 != Helical
+                    for B2 in [Periodic, Open]
+                        for B3 in [Periodic, Open]
+                            @test (
+                                HyperCubic{3}((10, 5, 7), (B1(), B2(), B3()))
+                                == HyperCubic((10, 5, 7), (B1(), B2(), B3()))
+                                == Cubic((10, 5, 7), (B1(), B2(), B3()))
+                            )
+                        end
+                        @test_throws ArgumentError Cubic((10, 5, 7), (B1(), B2(), Helical()))
+                    end
+                    @test_throws ArgumentError Cubic((10, 5, 7), (B1(), Helical(), Helical()))
+                end
+            end
 
-            @test HyperCubic((10, 5, 7), MixedBoundary(Periodic(), Open(), Periodic())) == Cubic((10, 5, 7), MixedBoundary(Periodic(), Open(), Periodic()))
         end
     end
 
@@ -121,16 +146,15 @@ end
         end
 
         @testset "Square Neighbors" begin
-            @test Set(neighbors(Square(10, Periodic()), Coordinate(10,10))) == Set([Coordinate(10, 9), Coordinate(10, 1), Coordinate(1, 10), Coordinate(9, 10)])
-            @test Set(neighbors(Square(10, Periodic()), Coordinate(5,10))) == Set([Coordinate(5, 9), Coordinate(5, 1), Coordinate(4, 10), Coordinate(6, 10)])
-            @test Set(neighbors(Square(10, Periodic()), Coordinate(10,5))) == Set([Coordinate(10, 4), Coordinate(10, 6), Coordinate(9, 5), Coordinate(1, 5)])
-            @test Set(neighbors(Square(10, Periodic()), Coordinate(5,5))) == Set([Coordinate(5, 4), Coordinate(5, 6), Coordinate(4, 5), Coordinate(6, 5)])
+            @test Set(neighbors(Square((10, 10), Periodic()), Coordinate(10,10))) == Set([Coordinate(10, 9), Coordinate(10, 1), Coordinate(1, 10), Coordinate(9, 10)])
+            @test Set(neighbors(Square((10, 10), Periodic()), Coordinate(5,10))) == Set([Coordinate(5, 9), Coordinate(5, 1), Coordinate(4, 10), Coordinate(6, 10)])
+            @test Set(neighbors(Square((10, 10), Periodic()), Coordinate(10,5))) == Set([Coordinate(10, 4), Coordinate(10, 6), Coordinate(9, 5), Coordinate(1, 5)])
+            @test Set(neighbors(Square((10, 10), Periodic()), Coordinate(5,5))) == Set([Coordinate(5, 4), Coordinate(5, 6), Coordinate(4, 5), Coordinate(6, 5)])
 
-            @test Set(neighbors(Square(10, Open()), Coordinate(10,10))) == Set([Coordinate(10, 9), Coordinate(9, 10)])
-            @test Set(neighbors(Square(10, Open()), Coordinate(5,10))) == Set([Coordinate(5, 9), Coordinate(4, 10), Coordinate(6, 10)])
-            @test Set(neighbors(Square(10, Open()), Coordinate(10,5))) == Set([Coordinate(10, 4), Coordinate(10, 6), Coordinate(9, 5)])
-            @test Set(neighbors(Square(10, Open()), Coordinate(5,5))) == Set([Coordinate(5, 4), Coordinate(5, 6), Coordinate(4, 5), Coordinate(6, 5)])
-
+            @test Set(neighbors(Square((10, 10), Open()), Coordinate(10,10))) == Set([Coordinate(10, 9), Coordinate(9, 10)])
+            @test Set(neighbors(Square((10, 10), Open()), Coordinate(5,10))) == Set([Coordinate(5, 9), Coordinate(4, 10), Coordinate(6, 10)])
+            @test Set(neighbors(Square((10, 10), Open()), Coordinate(10,5))) == Set([Coordinate(10, 4), Coordinate(10, 6), Coordinate(9, 5)])
+            @test Set(neighbors(Square((10, 10), Open()), Coordinate(5,5))) == Set([Coordinate(5, 4), Coordinate(5, 6), Coordinate(4, 5), Coordinate(6, 5)])
         end
     end
 end

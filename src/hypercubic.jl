@@ -1,48 +1,43 @@
-struct HyperCubic{N, B<:AbstractBoundary} <: AbstractLattice
+struct HyperCubic{N, B<:NTuple{N, AbstractBoundary}} <: AbstractLattice
     dims::NTuple{N, Int}
     bc::B
-    function HyperCubic{N, B}(dims::NTuple{N, Int}, bc::B) where {N, B <: AbstractBoundary}
-        if bc isa MixedBoundary && !(bc isa MixedBoundary{N})
-            throw(ArgumentError("Given MixedBoundary should have same number of dimensions as the Lattice!"))
-        end
+    function HyperCubic{N, B}(dims::NTuple{N, Int}, bc::B) where {N, B <: NTuple{N, AbstractBoundary}}
+        check_boundaries(bc)
         new{N, B}(dims, bc)
-    end
-
-    function HyperCubic{N, B}(dim::Int, bc::B) where {N, B <: AbstractBoundary}
-        new{N, B}(ntuple(x->dim, N), bc)
     end
 end
 
-HyperCubic{N, B}(dims::NTuple{N, Int}) where {N, B <: AbstractBoundary} = HyperCubic{N, B}(dims, B())
-HyperCubic{N, B}(dims::NTuple{N, Int}) where {N, B <: MixedBoundary} = error("Can't initialize HyperCubic with MixedBoundary just from type information!")
+HyperCubic{N}(dims::NTuple{N, Int}, bcs::NTuple{N, AbstractBoundary}) where N = HyperCubic{N, typeof(bcs)}(dims, bcs)
+function HyperCubic{N}(dims::NTuple{N, Int}, bc::AbstractBoundary=Periodic()) where N
+    bcs = ntuple(x->bc, N)
+    HyperCubic{N, typeof(bcs)}(dims, bcs)
+end
 
-
-HyperCubic{N}(dims::NTuple{N, Int}, bc::B=Periodic()) where {N, B <: AbstractBoundary} = HyperCubic{N, B}(dims, bc)
-HyperCubic(dims::NTuple{N, Int}, bc::B=Periodic()) where {N, B <: AbstractBoundary} = HyperCubic{N, B}(dims, bc)
-
-HyperCubic{N, B}(dim::Int) where {N, B <: AbstractBoundary} = HyperCubic{N, B}(dim, B())
-HyperCubic{N}(dim::Int, bc::B=Periodic()) where {N, B <: AbstractBoundary} = HyperCubic{N, B}(dim, bc)
+HyperCubic(dims::NTuple{N, Int}, bc) where N = HyperCubic{N}(dims, bc)
+HyperCubic(dims::NTuple{N, Int}) where N = HyperCubic{N}(dims)
 
 const Chain = HyperCubic{1}
+Chain(dim::Int, bc) = Chain((dim,), bc)
+Chain(dim::Int) = Chain((dim,))
+
 const Square = HyperCubic{2}
 const Cubic = HyperCubic{3}
 
-_apply_bc(::Type{Periodic}, length, coord) = mod(coord, 1:length)
-_apply_bc(::Type{Open}, length, coord) = (1 <= coord <= length) ? coord : nothing
-_apply_bc(bc::AbstractBoundary, length, coord) = _apply_bc(typeof(bc), length, coord)
+apply_boundary(::Periodic, length::Int, x::Int) = mod(x, 1:length)
+apply_boundary(::Open, length::Int, x::Int) = (1 <= x <= length) ? x : nothing
 
 
-function _apply_bcs(lattice::HyperCubic{N, Periodic}, site::Coordinate{N, Int})::Coordinate{N, Int} where N
-    return Coordinate(_apply_bc.(Periodic, lattice.dims, site.coordinates)...)
+function apply_boundary_conditions(lattice::HyperCubic{N, NTuple{N, Periodic}}, site::Coordinate{N, Int})::Coordinate{N, Int} where N
+    return Coordinate(apply_boundary.(lattice.bc, lattice.dims, site.coordinates)...)
 end
 
-function _apply_bcs(lattice::HyperCubic{N, MixedBoundary}, site::Coordinate{N, Int})::Union{Coordinate{N, Int}, Nothing} where N
+function apply_boundary_conditions(lattice::HyperCubic{N, NTuple{N, B}}, site::Coordinate{N, Int})::Union{Coordinate{N, Int}, Nothing} where {N, B <: AbstractBoundary}
     dims = lattice.dims
-    bcs = lattice.bc.boundaries
+    bcs = lattice.bc
     coords = site.coordinates
     clipped = []
     for i in 1:N
-        c = _apply_bc(bcs[i], dims[i], coords[i])
+        c = apply_boundary(bcs[i], dims[i], coords[i])
         if isnothing(c)
             return nothing
         else
@@ -52,35 +47,20 @@ function _apply_bcs(lattice::HyperCubic{N, MixedBoundary}, site::Coordinate{N, I
     return Coordinate(clipped...)
 end
 
-function _apply_bcs(lattice::HyperCubic{N, <:AbstractBoundary}, site::Coordinate{N, Int})::Union{Coordinate{N, Int}, Nothing} where N
-    dims = lattice.dims
-    coords = site.coordinates
-    bc = lattice.bc
-    clipped = []
-    for i in 1:N
-        c = _apply_bc(bc, dims[i], coords[i])
-        if isnothing(c)
-            return nothing
-        else
-            push!(clipped, c)
-        end
-    end
-    return Coordinate(clipped...)
-end
 
 # in 1D, Helical and Periodic BCs are equivalent
-for BC in (:Periodic, :Helical)
-    @eval function neighbors(lattice::Chain{$BC}, site::Coordinate{1, Int}, ::Val{k}) where k
+for BC in (:Periodic, :Helical), k in (:1, :K)
+    @eval function neighbors(lattice::Chain{NTuple{1,$BC}}, site::Coordinate{1, Int}, ::Val{$k}) where K
         l = lattice.dims[1]
         c = site.coordinates[1]
         return [
-            Coordinate(_apply_bc(Periodic, l, c - k)),
-            Coordinate(_apply_bc(Periodic, l, c + k)),
+            Coordinate(apply_boundary(Periodic(), l, c - $k)),
+            Coordinate(apply_boundary(Periodic(), l, c + $k)),
         ]
     end
 end
 
-function neighbors(lattice::Chain{Open}, site::Coordinate{1, Int}, ::Val{k}) where k
+function neighbors(lattice::Chain{NTuple{1,Open}}, site::Coordinate{1, Int}, ::Val{k}) where k
     l = lattice.dims[1]
     sp, sm = site + Coordinate(k), site - Coordinate(k)
     if sp.coordinates[1] > l
@@ -116,5 +96,25 @@ end
 
 function neighbors(lattice::HyperCubic{N}, site::Coordinate{N, Int}, k::Val{K}) where {N,K}
     ns = _neighbors(lattice, site, k)
-    return filter(!isnothing, [_apply_bcs(lattice, n) for n in ns])
+    return filter(!isnothing, [apply_boundary_conditions(lattice, n) for n in ns])
 end
+
+
+function neighbors(lattice::HyperCubic{N, NTuple{N, Helical}}, site::Int, k::Val{1}) where {N}
+    shifts = cumprod(lattice.dims)
+    linear_size = shifts[end]
+    shifts = [1; shifts[1:end-1]]
+
+    ns = Vector{Int}(undef, 2*N)
+
+    for i in 1:N
+        ns[i] = mod(site + shifts[i], 1:linear_size)
+        ns[i + N] = mod(site - shifts[i], 1:linear_size)
+    end
+    return ns
+end
+neighbors(lattice::HyperCubic{N, NTuple{N, Helical}}, site::Coordinate{N, Int}, k) where N = neighbors(
+    lattice,
+    sum(map(*, [1; cumprod(lattice.dims[1:end-1])], site.coordinates .- 1)),
+    k
+)

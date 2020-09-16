@@ -10,7 +10,7 @@ export neighbors
 
 export HyperCubic, Chain, Square, Cubic
 
-export AbstractBoundary, Periodic, Open, Helical, MixedBoundary
+export AbstractBoundary, Periodic, Open, Helical
 
 export Coordinate
 

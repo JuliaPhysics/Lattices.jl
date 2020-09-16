@@ -8,29 +8,15 @@ struct Open <: AbstractBoundary end
 # the "snake" boundary condition.
 struct Helical <: AbstractBoundary end
 
-# Allows defining lattices with different BCs along each
-#  dimension. Should reject Helical BC as that is a "global" BC.
-struct MixedBoundary{N} <: AbstractBoundary
-    boundaries::NTuple{N, AbstractBoundary}
-    function MixedBoundary{N}(bcs::NTuple{N, AbstractBoundary}) where N
-        if any(x -> x isa Helical, bcs)
-            throw(ArgumentError("Can't construct a MixedBoundary with a Helical boundary!"))
-        elseif any(x -> x isa MixedBoundary, bcs)
-            throw(ArgumentError("Can't nest MixedBoundary structs!"))
-        end
-        new{N}(bcs)
-    end
+
+# no checks necessary if all BCs are the same type
+for B in [:Periodic, :Open, :Helical]
+    @eval check_boundaries(bcs::NTuple{N, $B}) where N = bcs
 end
-
-# return the BC if there's only one
-MixedBoundary(bcs::NTuple{N, Periodic}) where N = Periodic()
-MixedBoundary(bcs::NTuple{N, Open}) where N = Open()
-MixedBoundary(bcs::NTuple{N, Helical}) where N = Helical()
-
-# base case for no type params
-MixedBoundary(bcs::NTuple{N, AbstractBoundary}) where N = MixedBoundary{N}(bcs)
-
-MixedBoundary(bcs::Vector{<:AbstractBoundary}) = MixedBoundary(tuple(bcs...))
-MixedBoundary(bcs::AbstractBoundary...) = MixedBoundary(bcs)
-
-ndims(::MixedBoundary{N}) where N = N
+function check_boundaries(bcs::NTuple{N, AbstractBoundary}) where N
+    if any(x -> x isa Helical, bcs)
+        throw(ArgumentError("Can't combine Helical boundary conditions with other BCs!"))
+    end
+    return bcs
+end
+check_boundaries(bcs::AbstractBoundary...) = check_boundaries(bcs)
