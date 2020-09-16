@@ -2,10 +2,11 @@ module Lattices
 
 import Base: size, ndims, length, show, nameof
 using Base.Iterators
-
-using StaticArrays
+using LinearAlgebra
 
 export AbstractLattice, WeightedLattice, CoordinateLattice
+
+export neighbors
 
 export HyperCubic, Chain, Square, SimpleCubic
 

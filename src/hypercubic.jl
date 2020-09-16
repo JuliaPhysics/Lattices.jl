@@ -30,80 +30,89 @@ _apply_bc(::Type{Open}, length, coord) = (1 <= coord <= length) ? coord : nothin
 _apply_bc(bc::AbstractBoundary, length, coord) = _apply_bc(typeof(bc), length, coord)
 
 
-function _apply_bcs(lattice::HyperCubic{N, Periodic}, site::SVector{N, Int})::SVector{N, Int} where N
-    dims = lattice.dims
-    return _apply_bc.(Periodic, dims, site)
+function _apply_bcs(lattice::HyperCubic{N, Periodic}, site::Coordinate{N, Int})::Coordinate{N, Int} where N
+    return Coordinate(_apply_bc.(Periodic, lattice.dims, site.coordinates)...)
 end
 
-function _apply_bcs(lattice::HyperCubic{N, MixedBoundary}, site::SVector{N, Int})::Union{SVector{N, Int}, Nothing} where N
+function _apply_bcs(lattice::HyperCubic{N, MixedBoundary}, site::Coordinate{N, Int})::Union{Coordinate{N, Int}, Nothing} where N
     dims = lattice.dims
     bcs = lattice.bc.boundaries
+    coords = site.coordinates
     clipped = []
     for i in 1:N
-        c = _apply_bc(bcs[i], dims[i], site[i])
+        c = _apply_bc(bcs[i], dims[i], coords[i])
         if isnothing(c)
             return nothing
         else
             push!(clipped, c)
         end
     end
-    return SVector{N}(clipped)
+    return Coordinate(clipped...)
 end
 
-function _apply_bcs(lattice::HyperCubic{N, Open}, site::SVector{N, Int})::Union{SVector{N, Int}, Nothing} where N
+function _apply_bcs(lattice::HyperCubic{N, <:PrimitiveBoundary}, site::Coordinate{N, Int})::Union{Coordinate{N, Int}, Nothing} where N
     dims = lattice.dims
+    coords = site.coordinates
+    bc = lattice.bc
     clipped = []
     for i in 1:N
-        c = _apply_bc(Open, dims[i], site[i])
+        c = _apply_bc(bc, dims[i], coords[i])
         if isnothing(c)
             return nothing
         else
             push!(clipped, c)
         end
     end
-    return SVector{N}(clipped)
+    return Coordinate(clipped...)
 end
 
 # in 1D, Helical and Periodic BCs are equivalent
 for BC in (:Periodic, :Helical)
-    @eval function neighbors(lattice::Chain{$BC}, site::Int, ::Val{k}) where k
+    @eval function neighbors(lattice::Chain{$BC}, site::Coordinate{1, Int}, ::Val{k}) where k
         l = lattice.dims[1]
-        return _apply_bc.(Periodic, l, [site - k, site + k])
+        c = site.coordinates[1]
+        return [
+            Coordinate(_apply_bc(Periodic, l, c - k)),
+            Coordinate(_apply_bc(Periodic, l, c + k)),
+        ]
     end
 end
 
-function neighbors(lattice::Chain{Open}, site::Int, ::Val{k}) where k
+function neighbors(lattice::Chain{Open}, site::Coordinate{1, Int}, ::Val{k}) where k
     l = lattice.dims[1]
-    sp, sm = site + k, site - k
-    if sp > l
-        if sm < 1
+    sp, sm = site + Coordinate(k), site - Coordinate(k)
+    if sp.coordinates[1] > l
+        if sm.coordinates[1] < 1
             return []
         else
             return [sm]
         end
     else
-        if sm < 1
+        if sm.coordinates[1] < 1
             return [sp]
         else
             return [sm, sp]
         end
     end
 end
+translation_vectors(lattice::HyperCubic{1}, k::Val{K}) where K = flatten((
+    map(c -> K*c, basis_vectors(lattice)),
+    map(c -> -K*c, basis_vectors(lattice)),
+))
+
+basis_vectors(lattice::HyperCubic{N}) where N = [Coordinate(Int.(v)...) for v in eachrow(Diagonal(I, N))]
+translation_vectors(lattice::HyperCubic{N}, k::Val{1}) where N = flatten((
+    basis_vectors(lattice), -basis_vectors(lattice)
+))
 
 
-basis_vectors(lattice::HyperCubic{N}) where N = eachrow(SMatrix{N, N}(I))
-translation_vectors(lattice::HyperCubic, k::Val{1}) = basis_vectors(lattice)
-
-function _neighbors(lattice::HyperCubic{N}, site::SVector{N, Int}, k::Val{1}) where N
-    bv = translation_vectors(lattice)
-    return flatten((
-        (site + v for i in bv),
-        (site - v for i in bv)
-    ))
+function _neighbors(lattice::HyperCubic{N}, site::Coordinate{N, Int}, k::Val{K}) where {N,K}
+    bv = translation_vectors(lattice, k)
+    return (site + v for v in bv)
 end
 
 
-function neighbors(lattice::HyperCubic{N}, site::SVector{N, Int}, k::Val{K}) where {N,K}
+function neighbors(lattice::HyperCubic{N}, site::Coordinate{N, Int}, k::Val{K}) where {N,K}
     ns = _neighbors(lattice, site, k)
-    return filter(!isnothing, (_apply_bcs(lattice, n) for n in ns))
+    return filter(!isnothing, [_apply_bcs(lattice, n) for n in ns])
 end
