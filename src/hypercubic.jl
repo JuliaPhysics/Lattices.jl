@@ -13,7 +13,9 @@ struct HyperCubic{N, B<:AbstractBoundary} <: AbstractLattice
     end
 end
 
-HyperCubic{N, B}(dims::NTuple{N, Int}) where {N, B <: PrimitiveBoundary} = HyperCubic{N, B}(dims, B())
+HyperCubic{N, B}(dims::NTuple{N, Int}) where {N, B <: AbstractBoundary} = HyperCubic{N, B}(dims, B())
+HyperCubic{N, B}(dims::NTuple{N, Int}) where {N, B <: MixedBoundary} = error("Can't initialize HyperCubic with MixedBoundary just from type information!")
+
 
 HyperCubic{N}(dims::NTuple{N, Int}, bc::B=Periodic()) where {N, B <: AbstractBoundary} = HyperCubic{N, B}(dims, bc)
 HyperCubic(dims::NTuple{N, Int}, bc::B=Periodic()) where {N, B <: AbstractBoundary} = HyperCubic{N, B}(dims, bc)
@@ -23,7 +25,7 @@ HyperCubic{N}(dim::Int, bc::B=Periodic()) where {N, B <: AbstractBoundary} = Hyp
 
 const Chain = HyperCubic{1}
 const Square = HyperCubic{2}
-const SimpleCubic = HyperCubic{3}
+const Cubic = HyperCubic{3}
 
 _apply_bc(::Type{Periodic}, length, coord) = mod(coord, 1:length)
 _apply_bc(::Type{Open}, length, coord) = (1 <= coord <= length) ? coord : nothing
@@ -50,7 +52,7 @@ function _apply_bcs(lattice::HyperCubic{N, MixedBoundary}, site::Coordinate{N, I
     return Coordinate(clipped...)
 end
 
-function _apply_bcs(lattice::HyperCubic{N, <:PrimitiveBoundary}, site::Coordinate{N, Int})::Union{Coordinate{N, Int}, Nothing} where N
+function _apply_bcs(lattice::HyperCubic{N, <:AbstractBoundary}, site::Coordinate{N, Int})::Union{Coordinate{N, Int}, Nothing} where N
     dims = lattice.dims
     coords = site.coordinates
     bc = lattice.bc

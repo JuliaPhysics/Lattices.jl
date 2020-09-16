@@ -42,19 +42,19 @@ end
         end
 
 
-        @testset "SimpleCubic Constructors" begin
+        @testset "Cubic Constructors" begin
             @test HyperCubic{3, Periodic}((10,10,10)) == HyperCubic{3, Periodic}(10)
-            @test HyperCubic{3, Periodic}(10) == SimpleCubic{Periodic}(10) == SimpleCubic(10)
-            @test HyperCubic{3, Periodic}(10) == SimpleCubic(10, Periodic())
-            @test HyperCubic{3, Open}(10) == SimpleCubic(10, Open()) == SimpleCubic{Open}(10)
-            @test HyperCubic{3, Helical}(10) == SimpleCubic(10, Helical()) == SimpleCubic{Helical}(10)
+            @test HyperCubic{3, Periodic}(10) == Cubic{Periodic}(10) == Cubic(10)
+            @test HyperCubic{3, Periodic}(10) == Cubic(10, Periodic())
+            @test HyperCubic{3, Open}(10) == Cubic(10, Open()) == Cubic{Open}(10)
+            @test HyperCubic{3, Helical}(10) == Cubic(10, Helical()) == Cubic{Helical}(10)
 
-            @test HyperCubic{3, Periodic}((10, 5, 7)) == SimpleCubic{Periodic}((10, 5, 7)) == SimpleCubic((10, 5, 7))
-            @test HyperCubic{3, Periodic}((10, 5, 7)) == SimpleCubic((10, 5, 7), Periodic())
-            @test HyperCubic{3, Open}((10, 5, 7)) == SimpleCubic((10, 5, 7), Open()) == SimpleCubic{Open}((10, 5, 7))
-            @test HyperCubic{3, Helical}((10, 5, 7)) == SimpleCubic((10, 5, 7), Helical()) == SimpleCubic{Helical}((10, 5, 7))
+            @test HyperCubic{3, Periodic}((10, 5, 7)) == Cubic{Periodic}((10, 5, 7)) == Cubic((10, 5, 7))
+            @test HyperCubic{3, Periodic}((10, 5, 7)) == Cubic((10, 5, 7), Periodic())
+            @test HyperCubic{3, Open}((10, 5, 7)) == Cubic((10, 5, 7), Open()) == Cubic{Open}((10, 5, 7))
+            @test HyperCubic{3, Helical}((10, 5, 7)) == Cubic((10, 5, 7), Helical()) == Cubic{Helical}((10, 5, 7))
 
-            @test HyperCubic((10, 5, 7), MixedBoundary(Periodic(), Open(), Periodic())) == SimpleCubic((10, 5, 7), MixedBoundary(Periodic(), Open(), Periodic()))
+            @test HyperCubic((10, 5, 7), MixedBoundary(Periodic(), Open(), Periodic())) == Cubic((10, 5, 7), MixedBoundary(Periodic(), Open(), Periodic()))
         end
     end
 

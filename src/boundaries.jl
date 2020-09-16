@@ -1,13 +1,12 @@
 abstract type AbstractBoundary end
-abstract type PrimitiveBoundary <: AbstractBoundary end
-struct Periodic <: PrimitiveBoundary end
-struct Open <: PrimitiveBoundary end
+struct Periodic <: AbstractBoundary end
+struct Open <: AbstractBoundary end
 
 # Helical BCs is a fast approximation to
 # Periodic BCs that takes advantage of the linear storage of
 # arrays. Those familiar with DMRG may recognize this as
 # the "snake" boundary condition.
-struct Helical <: PrimitiveBoundary end
+struct Helical <: AbstractBoundary end
 
 # Allows defining lattices with different BCs along each
 #  dimension. Should reject Helical BC as that is a "global" BC.

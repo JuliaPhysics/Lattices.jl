@@ -8,9 +8,9 @@ export AbstractLattice, WeightedLattice, CoordinateLattice
 
 export neighbors
 
-export HyperCubic, Chain, Square, SimpleCubic
+export HyperCubic, Chain, Square, Cubic
 
-export AbstractBoundary, PrimitiveBoundary, Periodic, Open, Helical, MixedBoundary
+export AbstractBoundary, Periodic, Open, Helical, MixedBoundary
 
 export Coordinate
 
