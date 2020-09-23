@@ -8,7 +8,11 @@ struct HyperCubic{N, B<:NTuple{N, AbstractBoundary}} <: AbstractLattice
     end
 end
 
-==(a::HyperCubic{N, B}, b::HyperCubic{N, B}) where {N, B <: NTuple{N, AbstractBoundary}} = (a.translation_vectors == b.translation_vectors)
+==(a::HyperCubic{N, B}, b::HyperCubic{N, B}) where {N, B <: NTuple{N, AbstractBoundary}} = (
+    a.dims === b.dims
+    && a.bc == b.bc
+    && a.translation_vectors == b.translation_vectors
+)
 ==(a::HyperCubic, b::HyperCubic) = false
 
 ndims(::HyperCubic{N}) where N = N
