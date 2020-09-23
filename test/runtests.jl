@@ -84,16 +84,19 @@ end
     end
 
     @testset "Translation Vectors" begin
-        # @test Set(Lattices.translation_vectors(HyperCubic{1}((10,)), Val(1))) == Set([
-        #     Coordinate(1), Coordinate(-1)
-        # ]) TODO: resolve method ambiguity
-        @test Set(Lattices.translation_vectors(HyperCubic{2}((10,10)), Val(1))) == Set([
+        for k in 1:10
+            @test Set(translation_vectors(HyperCubic{1}((10,)), k)) == Set([
+                Coordinate(k), Coordinate(-k)
+            ])
+        end
+
+        @test Set(translation_vectors(HyperCubic{2}((10,10)), 1)) == Set([
             Coordinate(1, 0),
             Coordinate(0, 1),
             Coordinate(-1, 0),
             Coordinate(0, -1)
         ])
-        @test Set(Lattices.translation_vectors(HyperCubic{3}((10,10,10)), Val(1))) == Set([
+        @test Set(translation_vectors(HyperCubic{3}((10,10,10)), 1)) == Set([
             Coordinate(1, 0, 0),
             Coordinate(0, 1, 0),
             Coordinate(0, 0, 1),
@@ -101,7 +104,7 @@ end
             Coordinate(0, -1, 0),
             Coordinate(0, 0, -1)
         ])
-        @test Set(Lattices.translation_vectors(HyperCubic{4}((10,10,10,10)), Val(1))) == Set([
+        @test Set(translation_vectors(HyperCubic{4}((10,10,10,10)), 1)) == Set([
             Coordinate(1, 0, 0, 0),
             Coordinate(0, 1, 0, 0),
             Coordinate(0, 0, 1, 0),
@@ -112,22 +115,34 @@ end
             Coordinate(0, 0, 0, -1),
         ])
 
-        @test Set(Lattices.translation_vectors(HyperCubic{1}((10,)), Val(2))) == Set([
-            Coordinate(2), Coordinate(-2)
+        @test Set(translation_vectors(HyperCubic{2}((10,10)), 2)) == Set([
+            Coordinate(1, 1),
+            Coordinate(-1, 1),
+            Coordinate(1, -1),
+            Coordinate(-1, -1),
         ])
-        # @test Lattices.translation_vectors(HyperCubic{2}, Val(1)) == Set([
-        #     Coordinate(1, 1),
-        #     Coordinate(-1, 1),
-        #     Coordinate(1, -1),
-        #     Coordinate(-1, -1),
-        # ])
-        # @test Lattices.translation_vectors(HyperCubic{3}, Val(1)) == Set([
-        #     Coordinate(1, 0, 0), Coordinate(0, 1, 0), Coordinate(0, 0, 1)
-        # ])
-        # @test Lattices.translation_vectors(HyperCubic{4}, Val(1)) == Set([
-        #     Coordinate(1, 0, 0, 0), Coordinate(0, 1, 0, 0), Coordinate(0, 0, 1, 0), Coordinate(0, 0, 0, 1)
-        # ])
 
+        @test Set(translation_vectors(HyperCubic{2}((10,10)), 3)) == Set([
+            Coordinate(2, 0),
+            Coordinate(0, 2),
+            Coordinate(-2, 0),
+            Coordinate(0, -2),
+        ])
+    end
+
+    @testset "Basis Vectors" begin
+        @test Set(basis_vectors(HyperCubic{1}((10,)))) == Set([
+            Coordinate(1)
+        ])
+        @test Set(basis_vectors(HyperCubic{2}((10,10)))) == Set([
+            Coordinate(1, 0), Coordinate(0, 1)
+        ])
+        @test Set(basis_vectors(HyperCubic{3}((10,10,10)))) == Set([
+            Coordinate(1, 0, 0), Coordinate(0, 1, 0), Coordinate(0, 0, 1)
+        ])
+        @test Set(basis_vectors(HyperCubic{4}((10,10,10,10)))) == Set([
+            Coordinate(1, 0, 0, 0), Coordinate(0, 1, 0, 0), Coordinate(0, 0, 1, 0), Coordinate(0, 0, 0, 1)
+        ])
     end
 
     @testset "Neighbors" begin
