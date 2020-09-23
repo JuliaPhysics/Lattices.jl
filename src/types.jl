@@ -70,6 +70,3 @@ end
 
 # Base.iterate(it::BondsIt, st) = iterate_lattice(it, it.lattice, st)
 # function iterate_lattice(::BondsIt, lattice, st) end
-
-
-neighbors(lattice::AbstractLattice, site::Coordinate) = neighbors(lattice, site, Val(1))
