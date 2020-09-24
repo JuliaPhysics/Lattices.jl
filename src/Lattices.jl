@@ -9,6 +9,7 @@ export AbstractLattice, WeightedLattice, CoordinateLattice
 export neighbors, translation_vectors, basis_vectors
 
 export HyperCubic, Chain, Square, Cubic
+export Triangular
 
 export AbstractBoundary, Periodic, Open, Helical
 
@@ -19,6 +20,7 @@ include("boundaries.jl")
 include("types.jl")
 include("neighbors.jl")
 include("hypercubic.jl")
+include("triangular.jl")
 # include("honeycomb.jl")
 
 end

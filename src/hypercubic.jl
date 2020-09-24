@@ -43,6 +43,8 @@ const Cubic = HyperCubic{3}
 #############################
 
 metric(::HyperCubic{N}) where N = I(N)
+ismetricdiag(::HyperCubic) = true
+
 function precompute_translation_vectors!(lattice::HyperCubic{1}, maximum_k::Int)
     d = lattice.translation_vectors
     for i in 1:maximum_k

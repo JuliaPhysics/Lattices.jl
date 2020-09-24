@@ -22,39 +22,49 @@ function _all_signed_translation_vectors(tv::Array{Int, 2})::Array{Int, 3}
 end
 
 
+norm2(lattice::AbstractLattice, v::AbstractVector{Int}) = dot(v, metric(lattice), v)
+norm(lattice::AbstractLattice, v::AbstractVector{Int}) = sqrt(norm2(lattice, v))
+
+
 function precompute_translation_vectors!(lattice::AbstractLattice, maximum_k::Int)
     if maximum_k < 0
         throw(ArgumentError("maximum_k must be non-negative!"))
     end
 
     N = ndims(lattice)
-    g = metric(lattice)
 
-    # TODO: need to test this on lattices with non-diagonal metrics
     tv = _all_translation_vectors(N, maximum_k)
-    if !isdiag(g)
+    if !ismetricdiag(lattice)
         tv = _all_signed_translation_vectors(tv)
         tv = reshape(tv, N, :)
         tv = unique(tv; dims=2)
     end
 
-    norms = dropdims(sum(tv .* (g * tv); dims = 1); dims = 1)
+    norms = [norm2(lattice, v) for v in eachcol(tv)]
     p = sortperm(norms)
 
     norms = norms[p]
     tv = tv[:, p]
-    if isdiag(g)
+    if ismetricdiag(lattice)
         stv = _all_signed_translation_vectors(tv)
     else
         stv = reshape(tv, size(tv)..., 1)
     end
 
-    uniq = sort!(unique(norms))
-    uniq = filter(!iszero, uniq)
+    uniq_ = filter(!iszero, sort!(unique(norms)))
+    uniq = Float64[]
+    for i in axes(uniq_, 1)
+        if length(uniq) == 0 || !(last(uniq) ≈ uniq_[i])
+            push!(uniq, uniq_[i])
+        end
+        if length(uniq) == maximum_k
+            break
+        end
+    end
 
     d = lattice.translation_vectors
     for k in 1:maximum_k
-        idx = findall(uniq[k] .== norms)
+        idx = findall(uniq[k] .≈ norms)
         d[k] = ([
             Coordinate(v...)
             for tv in eachslice(@view stv[:, idx, :]; dims=3)
@@ -75,7 +85,14 @@ end
 
 
 basis_vectors(lattice::AbstractLattice) = filter(translation_vectors(lattice, 1)) do v
-    all(>=(0), v.coordinates)
+    for c in v.coordinates
+        if c > 0
+            return true
+        elseif c < 0
+            return false
+        end
+    end
+    return false
 end
 
 

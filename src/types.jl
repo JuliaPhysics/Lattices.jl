@@ -22,11 +22,6 @@ struct CoordinateLattice{L <: AbstractLattice, Coordinate} <: AbstractLattice
     coordinates::Vector{Coordinate}
 end
 
-struct HoneyComb <: AbstractLattice
-    dims::NTuple{2, Int}
-    boundaries::NTuple{2, AbstractBoundary}
-end
-
 struct GraphLattice{Graph} <: AbstractLattice
     graph::Graph
 end
@@ -70,3 +65,33 @@ end
 
 # Base.iterate(it::BondsIt, st) = iterate_lattice(it, it.lattice, st)
 # function iterate_lattice(::BondsIt, lattice, st) end
+
+
+# Common functions for
+for LatName in [:HoneyComb, :Triangular, :Kagome]
+    @eval struct $LatName{B <: NTuple{2, AbstractBoundary}} <: AbstractLattice
+        dims::NTuple{2, Int}
+        bc::NTuple{2, AbstractBoundary}
+        translation_vectors::Dict{Int, Vector{Coordinate{2, Int}}}
+        function $LatName{B}(dims::NTuple{2, Int}, bc::B) where B <: NTuple{2, AbstractBoundary}
+            check_boundaries(bc)
+            new{B}(dims, bc, Dict{Int, Vector{Coordinate{2, Int}}}())
+        end
+    end
+
+    @eval ==(a::$LatName{B}, b::$LatName{B}) where B <: NTuple{2, AbstractBoundary} = (
+        a.dims === b.dims
+        && a.bc == b.bc
+        && a.translation_vectors == b.translation_vectors
+    )
+    @eval ==(a::$LatName, b::$LatName) = false
+
+    @eval ndims(::$LatName) = 2
+
+    ################
+    ## Constructors
+    ################
+
+    @eval $LatName(dims::NTuple{2, Int}, bcs::NTuple{2, AbstractBoundary}) = $LatName{typeof(bcs)}(dims, bcs)
+    @eval $LatName(dims::NTuple{2, Int}, bc::AbstractBoundary=Periodic()) = $LatName(dims, ntuple(x->bc, 2))
+end

@@ -172,4 +172,89 @@ end
             @test Set(neighbors(Square((10, 10), Open()), Coordinate(5,5))) == Set([Coordinate(5, 4), Coordinate(5, 6), Coordinate(4, 5), Coordinate(6, 5)])
         end
     end
+
+    for N in 1:10
+        @test ndims(HyperCubic{N}(ntuple(x->5, N))) == N
+    end
+end
+
+
+@testset "Triangular" begin
+
+    @test ndims(Triangular((10,5))) == 2
+
+    @testset "Constructors" begin
+        # test default BC
+        @test Triangular((10, 5)) == Triangular((10, 5), Periodic())
+
+        for B1 in [Periodic, Open, Helical]
+            @test (
+                Triangular((10, 5), B1())
+                == Triangular((10, 5), (B1(), B1()))
+                == Triangular((10, 5), B1())
+                == Triangular((10, 5), (B1(), B1()))
+            )
+            if B1 != Helical
+                for B2 in [Periodic, Open]
+                    @test (
+                        Triangular((10, 5), (B1(), B2()))
+                        == Triangular((10, 5), (B1(), B2()))
+                    )
+                end
+                @test_throws ArgumentError Triangular((10, 5), (B1(), Helical()))
+            end
+        end
+    end
+
+    @testset "Translation Vectors" begin
+
+        odd_vecs = Set([
+            Coordinate(1, 0),
+            Coordinate(-1, 0),
+            Coordinate(0, 1),
+            Coordinate(0, -1),
+            Coordinate(1, -1),
+            Coordinate(-1, 1)
+        ])
+
+        even_vecs = Set([
+            Coordinate(2, -1),
+            Coordinate(-2, 1),
+            Coordinate(1, 1),
+            Coordinate(-1, 2),
+            Coordinate(1, -2),
+            Coordinate(-1, -1),
+        ])
+
+        @test Set(translation_vectors(Triangular((10,10)), 1)) == odd_vecs
+        @test Set(translation_vectors(Triangular((10,10)), 2)) == even_vecs
+        @test Set(translation_vectors(Triangular((10,10)), 3)) == Set(2 .* odd_vecs)
+
+        @test Set(translation_vectors(Triangular((10,10)), 4)) == Set([
+            Coordinate(2, 1),
+            Coordinate(-2, -1),
+            Coordinate(3, -1),
+            Coordinate(-3, 1),
+
+            Coordinate(2, -3),
+            Coordinate(-2, 3),
+            Coordinate(3, -2),
+            Coordinate(-3, 2),
+
+            Coordinate(1, -3),
+            Coordinate(-1, 3),
+            Coordinate(-1, -2),
+            Coordinate(1, 2),
+        ])
+    end
+
+    @testset "Basis Vectors" begin
+        @test Set(basis_vectors(Triangular((10,10)))) == Set([
+            Coordinate(1, 0),
+            Coordinate(0, 1),
+            Coordinate(1, -1)
+        ])
+    end
+
+
 end
