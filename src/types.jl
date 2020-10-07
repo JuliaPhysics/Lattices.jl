@@ -12,6 +12,14 @@ For a more concrete definition please refer the following material:
 """
 abstract type AbstractLattice end
 
+unitcellsize(l::AbstractLattice) = 1
+hasunitcell(l::AbstractLattice) = Val{false}()
+
+_ncoords(::Val{true}, l::AbstractLattice) = 1 + ndims(l)
+_ncoords(::Val{false}, l::AbstractLattice) = ndims(l)
+ncoordinates(l::AbstractLattice) = _ncoords(hasunitcell(l), l)
+
+
 struct WeightedLattice{L <: AbstractLattice, W} <: AbstractLattice
     lattice::L
     weights::W
@@ -20,11 +28,6 @@ end
 struct CoordinateLattice{L <: AbstractLattice, Coordinate} <: AbstractLattice
     lattice::L
     coordinates::Vector{Coordinate}
-end
-
-struct HoneyComb <: AbstractLattice
-    dims::NTuple{2, Int}
-    boundaries::NTuple{2, AbstractBoundary}
 end
 
 struct GraphLattice{Graph} <: AbstractLattice
