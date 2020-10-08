@@ -6,7 +6,7 @@ using LinearAlgebra
 
 export AbstractLattice, WeightedLattice, CoordinateLattice
 
-export neighbors, translation_vectors
+export neighbors, bonds, sites, translation_vectors
 
 export HyperCubic, Chain, Square, Cubic
 export Triangular, Honeycomb, Kagome
@@ -19,6 +19,8 @@ include("coordinate.jl")
 include("boundaries.jl")
 include("types.jl")
 include("neighbors.jl")
+include("sites.jl")
+include("bonds.jl")
 include("hypercubic.jl")
 include("triangular.jl")
 

@@ -37,6 +37,7 @@ Chain(dim::Int) = Chain((dim,))
 const Square = HyperCubic{2}
 const Cubic = HyperCubic{3}
 
+
 #############################
 ## Translation/Basis Vectors
 #############################
@@ -85,6 +86,7 @@ function neighbors(lattice::Chain{NTuple{1,Open}}, site::Coordinate{1, Int}, ::V
         end
     end
 end
+
 
 # function neighbors(lattice::HyperCubic{N, NTuple{N, Periodic}}, site::Coordinate{N, Int}, ::Val{K}) where {N,K}
 #     return [apply_boundary_conditions(lattice, n) for n in _neighbors(lattice, site, K)]
