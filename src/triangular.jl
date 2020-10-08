@@ -1,6 +1,6 @@
 struct Triangular{B <: NTuple{2, AbstractBoundary}} <: AbstractLattice
     dims::NTuple{2, Int}
-    bcs::NTuple{2, AbstractBoundary}
+    bcs::B
     translation_vectors::Dict{Int, Vector{Coordinate{2, Int}}}
     function Triangular{B}(dims::NTuple{2, Int}, bcs::B) where B <: NTuple{2, AbstractBoundary}
         check_boundaries(bcs)
@@ -13,7 +13,7 @@ for L in [:Honeycomb, :Kagome]
 
     @eval struct $L{B <: NTuple{2, AbstractBoundary}} <: AbstractLattice
         dims::NTuple{2, Int}
-        bcs::NTuple{2, AbstractBoundary}
+        bcs::B
         translation_vectors::Dict{Tuple{Int, Int}, Vector{Coordinate{3, Int}}}
         function $L{B}(dims::NTuple{2, Int}, bcs::B) where B <: NTuple{2, AbstractBoundary}
             check_boundaries(bcs)

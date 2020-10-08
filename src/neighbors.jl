@@ -136,7 +136,6 @@ function _generate_all_translation_vectors!(::Val{false}, lattice::AbstractLatti
 end
 
 
-
 precompute_translation_vectors!(lattice, maximum_k) = (
     maximum_k <= 0
     ? throw(ArgumentError("maximum_k must be positive!"))
