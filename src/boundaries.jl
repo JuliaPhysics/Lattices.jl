@@ -20,3 +20,7 @@ function check_boundaries(bcs::NTuple{N, AbstractBoundary}) where N
     return bcs
 end
 check_boundaries(bcs::AbstractBoundary...) = check_boundaries(bcs)
+
+
+apply_boundary(::Periodic, length::Int, x::Int) = mod(x, 1:length)
+apply_boundary(::Open, length::Int, x::Int) = (1 <= x <= length) ? x : nothing
