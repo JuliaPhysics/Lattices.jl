@@ -25,7 +25,7 @@ dimensions(l::AbstractLattice) = l.dims
 size(l::AbstractLattice) = dimensions(l)
 size(l::AbstractLattice, d::Int) = size(l)[d]
 
-primitivevectors(l::AbstractLattice)
+primitivevectors(::AbstractLattice) = error("Not implemented")
 metric(l::AbstractLattice) = (A = primitivevectors(l); A' * A)
 ismetricdiag(l::AbstractLattice) = isdiag(metric(l))
 

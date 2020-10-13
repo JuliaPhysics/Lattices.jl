@@ -69,7 +69,7 @@ for L in [:HyperCubic, :HyperRectangular]
 
     @eval ndims(::$L{N}) where N = N
 
-    ==(a::$L{N, B}, b::$L{N, B}) where {N, B <: NTuple{N, AbstractBoundary}} = (
+    @eval ==(a::$L{N, B}, b::$L{N, B}) where {N, B <: NTuple{N, AbstractBoundary}} = (
         dimensions(a) === dimensions(b)
         && boundaryconditions(a) === boundaryconditions(b)
         && latticeconstants(a) == latticeconstants(b)
