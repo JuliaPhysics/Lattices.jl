@@ -1,4 +1,4 @@
-struct Coordinate{N, T}
+struct Coordinate{N, T <: Integer}
     coordinates::NTuple{N, T}
 end
 

@@ -8,7 +8,7 @@ export AbstractLattice, WeightedLattice, CoordinateLattice
 
 export neighbors, bonds, sites, translation_vectors
 
-export HyperCubic, Chain, Square, Cubic
+export HyperRectangular, HyperCubic, Chain, Square, Cubic
 export Triangular, Honeycomb, Kagome
 
 export AbstractBoundary, Periodic, Open, Helical
@@ -21,7 +21,7 @@ include("types.jl")
 include("neighbors.jl")
 include("sites.jl")
 include("bonds.jl")
-include("hypercubic.jl")
+include("hyperrectangular.jl")
 include("triangular.jl")
 
 
