@@ -1,12 +1,12 @@
 module Lattices
 
-import Base: size, ndims, length, show, nameof, ==
+import Base: size, ndims, length, show, nameof, ==, axes, strides, checkbounds
 using Base.Iterators
 using LinearAlgebra
 
 export AbstractLattice, WeightedLattice, CoordinateLattice
 
-export neighbors, bonds, sites, translation_vectors
+export neighbors, bonds, sites, translation_vectors, to_site_id, to_coordinate
 
 export HyperCubic, Chain, Square, Cubic
 export Triangular, Honeycomb, Kagome

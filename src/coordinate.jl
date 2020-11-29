@@ -1,16 +1,22 @@
 struct Coordinate{N, T}
     coordinates::NTuple{N, T}
 end
-
-Coordinate(xs::T...) where T = Coordinate{length(xs), T}(xs)
+Coordinate{N}(xs::NTuple{N, T}) where {N, T} = Coordinate{N, T}(xs)
+Coordinate(xs::NTuple{N, T}) where {N, T} = Coordinate{N, T}(xs)
+Coordinate(xs...) = Coordinate(xs)
 
 for op in [:+, :-]
-    @eval Base.$op(x::Coordinate{N}, y::Coordinate{N}) where N = Coordinate(map($op, x.coordinates, y.coordinates))
+    @eval Base.$op(x::Coordinate{N}, y::Coordinate{N}) where N =
+        Coordinate(map($op, x.coordinates, y.coordinates))
 
     @eval Base.$op(x::Coordinate{N}, y::AbstractVector) where N = $op(x, Coordinate(y...))
     @eval Base.$op(x::AbstractVector, y::Coordinate{N}) where N = $op(Coordinate(x...), y)
-
 end
+
+
+==(a::Coordinate{N, T}, b::Coordinate{N, T}) where {N, T} =
+    (a.coordinates === b.coordinates)
+==(a::Coordinate, b::Coordinate) = false
 
 
 Base.:*(x::Coordinate, y::Int) = Coordinate(map(c -> y*c, x.coordinates))
