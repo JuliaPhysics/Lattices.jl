@@ -1,5 +1,3 @@
-import Base: size, ndims, length, show, nameof
-
 """
     AbstractLattice
 
@@ -13,11 +11,34 @@ For a more concrete definition please refer the following material:
 abstract type AbstractLattice end
 
 unitcellsize(l::AbstractLattice) = 1
-hasunitcell(l::AbstractLattice) = Val{false}()
+hasunitcell(::AbstractLattice) = Val{false}()
 
 _ncoords(::Val{true}, l::AbstractLattice) = 1 + ndims(l)
 _ncoords(::Val{false}, l::AbstractLattice) = ndims(l)
 ncoordinates(l::AbstractLattice) = _ncoords(hasunitcell(l), l)
+
+
+function size(::Val{true}, l::AbstractLattice, dim::Int)
+    if dim > ncoordinates(l)
+        return 1  # copying behaviour of `size` for multidimensional arrays
+    elseif dim == ncoordinates(l)
+        return unitcellsize(l)
+    else
+        return l.dims[dim]
+    end
+end
+size(::Val{false}, l::AbstractLattice, dim::Int) = (dim > ndims(l)) ? 1 : l.dims[dim]
+size(l::AbstractLattice, dim::Int) = size(hasunitcell(l), l, dim)
+
+size(::Val{true}, l::AbstractLattice) = (l.dims..., unitcellsize(l))
+size(::Val{false}, l::AbstractLattice) = l.dims
+size(l::AbstractLattice) = size(hasunitcell(l), l)
+
+axes(l::AbstractLattice, dim::Int) = Base.OneTo(size(l, dim))
+axes(l::AbstractLattice) = map(d -> Base.OneTo(d), size(l))
+
+strides(l::AbstractLattice) = (1, cumprod(size(l)[1:end-1])...)
+nsites(l::AbstractLattice) = prod(size(l))
 
 
 struct WeightedLattice{L <: AbstractLattice, W} <: AbstractLattice
