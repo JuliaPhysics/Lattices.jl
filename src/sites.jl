@@ -7,8 +7,8 @@ checkbounds(L::AbstractLattice, I::Int...) = checkbounds(Bool, L, I...) || throw
 
 
 @inline function to_site_id(lattice::AbstractLattice, coords::NTuple{N}) where N
+    @boundscheck (N == ncoordinates(lattice)) || ArgumentError("Incorrect number of coordinates! Lattice expects $(ncoordinates(lattice)), got $N")
     @boundscheck checkbounds(lattice, coords...)
-    (N == ncoordinates(lattice)) || ArgumentError("Incorrect number of coordinates! Lattice expects $(ncoordinates(lattice)), got $N")
 
     sizes = (1, size(lattice)...)
     id = 0
@@ -18,7 +18,7 @@ checkbounds(L::AbstractLattice, I::Int...) = checkbounds(Bool, L, I...) || throw
     end
     return id + 1  # 1-based indexing
 end
-to_site_id(lattice::AbstractLattice, coords::Coordinate) = to_site_id(lattice, coords.coordinates)
+Base.@propagate_inbounds to_site_id(lattice::AbstractLattice, coords::Coordinate) = to_site_id(lattice, coords.coordinates)
 
 
 @inline function to_coordinate(lattice::AbstractLattice, site_id::Int)
