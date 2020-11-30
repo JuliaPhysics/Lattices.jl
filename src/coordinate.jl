@@ -1,9 +1,9 @@
 struct Coordinate{N, T}
     coordinates::NTuple{N, T}
+    Coordinate{N}(xs::NTuple{N, T}) where {N, T} = new{N, T}(xs)
+    Coordinate(xs::NTuple{N, T}) where {N, T} = new{N, T}(xs)
+    Coordinate(xs::T...) where T = new{length(xs), T}(xs)
 end
-Coordinate{N}(xs::NTuple{N, T}) where {N, T} = Coordinate{N, T}(xs)
-Coordinate(xs::NTuple{N, T}) where {N, T} = Coordinate{N, T}(xs)
-Coordinate(xs...) = Coordinate(xs)
 
 for op in [:+, :-]
     @eval Base.$op(x::Coordinate{N}, y::Coordinate{N}) where N =

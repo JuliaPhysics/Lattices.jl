@@ -6,7 +6,7 @@ using LinearAlgebra
 
 export AbstractLattice, WeightedLattice, CoordinateLattice
 
-export neighbors, bonds, sites, translation_vectors, to_site_id, to_coordinate
+export neighbors, bonds, sites, translation_vectors, to_site_id, to_coordinate, nsites
 
 export HyperCubic, Chain, Square, Cubic
 export Triangular, Honeycomb, Kagome
