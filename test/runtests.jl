@@ -39,10 +39,6 @@ end
     @test_throws BoundsError to_site_id(l, Coordinate(2,3,4,6))
     @test_throws BoundsError to_site_id(l, Coordinate(5,4,2,8))
 
-    @test (@inbounds to_site_id(l, Coordinate(5,4,2,8))) > nsites(l)
-    @test (@inbounds to_site_id(l, Coordinate(5,4,2))) != 0
-    @test (@inbounds to_site_id(l, Coordinate(5,4,2,7,1))) != 0
-
     # test case of non-trivial unit-cell
     l = Kagome((5,7))
     @test to_coordinate(l, to_site_id(l, Coordinate(1,1,1))) === Coordinate(1,1,1)  # origin

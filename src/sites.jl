@@ -1,14 +1,12 @@
 sites(lattice::AbstractLattice) = (Coordinate(s.I) for s in CartesianIndices(axes(lattice)))
 
-checkbounds(::Type{Bool}, L::AbstractLattice, I::Int...) =
-    all((s, i)::NTuple{2,Int} -> checkindex(Bool, 1:s, i), zip(size(L), I))
-
+checkbounds(::Type{Bool}, L::AbstractLattice, I::Int...) = Base.checkbounds_indices(Bool, axes(L), I)
 checkbounds(L::AbstractLattice, I::Int...) = checkbounds(Bool, L, I...) || throw(BoundsError(L, I))
 
 
 @inline function to_site_id(lattice::AbstractLattice, coords::NTuple{N}) where N
     @boundscheck begin
-        (N == ncoordinates(lattice)) || ArgumentError("Incorrect number of coordinates! Lattice expects $(ncoordinates(lattice)), got $N")
+        (N == ncoordinates(lattice)) || throw(ArgumentError("Incorrect number of coordinates! $(typeof(lattice)) expects $(ncoordinates(lattice)), got $N"))
         checkbounds(lattice, coords...)
     end
 
