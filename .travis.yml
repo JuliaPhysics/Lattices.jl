@@ -15,6 +15,9 @@ env:
   global:
     - DOCUMENTER_DEBUG=true
 
+script:
+  - julia --project --color=yes -e 'import Pkg; Pkg.build(); Pkg.test("Lattices"; coverage=true)'
+
 jobs:
   include:
     - stage: "Documentation"
