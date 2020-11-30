@@ -8,7 +8,6 @@ using Test, Lattices
     @test Lattices.check_boundaries((Helical(), Helical())) == (Helical(), Helical())
 
     @test_throws ArgumentError Lattices.check_boundaries(Periodic(), Helical())
-
 end
 
 @testset "Site IDs" begin
@@ -38,6 +37,8 @@ end
     @test_throws BoundsError to_site_id(l, Coordinate(0,0,0,0))
     @test_throws BoundsError to_site_id(l, Coordinate(2,3,4,6))
     @test_throws BoundsError to_site_id(l, Coordinate(5,4,2,8))
+    @test_throws ArgumentError to_site_id(l, Coordinate(2,3,1,4,5))
+    @test_throws ArgumentError to_site_id(l, Coordinate(5,4,2))
 
     # test case of non-trivial unit-cell
     l = Kagome((5,7))
@@ -55,6 +56,8 @@ end
     @test_throws BoundsError to_site_id(l, Coordinate(0,0,0))
     @test_throws BoundsError to_site_id(l, Coordinate(2,3,4))
     @test_throws BoundsError to_site_id(l, Coordinate(5,7,4))
+    @test_throws ArgumentError to_site_id(l, Coordinate(2,4,2,4))
+    @test_throws ArgumentError to_site_id(l, Coordinate(2,4))
 end
 
 include("hypercubic.jl")
