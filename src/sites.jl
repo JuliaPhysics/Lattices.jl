@@ -7,8 +7,10 @@ checkbounds(L::AbstractLattice, I::Int...) = checkbounds(Bool, L, I...) || throw
 
 
 @inline function to_site_id(lattice::AbstractLattice, coords::NTuple{N}) where N
-    @boundscheck (N == ncoordinates(lattice)) || ArgumentError("Incorrect number of coordinates! Lattice expects $(ncoordinates(lattice)), got $N")
-    @boundscheck checkbounds(lattice, coords...)
+    @boundscheck begin
+        (N == ncoordinates(lattice)) || ArgumentError("Incorrect number of coordinates! Lattice expects $(ncoordinates(lattice)), got $N")
+        checkbounds(lattice, coords...)
+    end
 
     sizes = (1, size(lattice)...)
     id = 0
