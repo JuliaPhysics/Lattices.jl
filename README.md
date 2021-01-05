@@ -1,50 +1,10 @@
-# Lattice.jl
+# Lattice types defined here
 
-[![Build Status](https://travis-ci.org/Roger-luo/Lattices.jl.svg?branch=master)](https://travis-ci.org/Roger-luo/Lattices.jl)
+- poly_lattices.jl contains multi-site basis lattice tools
+- simple_lattices.jl contains single-site basis lattice tools
+- conventional PBCs in translation vector directions (both a1 a2, just one of a1 a2, or none)
 
-A library for defining lattices in Julia.
+## TODOs:
 
-## Install
-
-```
-pkg> add Lattices
-```
-
-## A glance of the interface
-
-```julia-repl
-julia> using Lattice
-
-julia> l = chain(4)
-Chain Lattice:
-  Periodic boundary
-  size: (4,)
-
-julia> for each in sites(l)
-          # do something on sites
-          @show each
-       end
-
-each = 1
-each = 2
-each = 3
-each = 4
-
-julia> for (a, b) in edges(l, order=2)
-          # do something on edges
-
-          println("this is point a: ", a)
-          println("this is point b: ", b)
-       end
-```
-
-## TODO
-
-- [ ] Site Type
-
-- [ ] Hexagonel Lattice
-- [ ] Triangular Lattice
-
-## License
-
-Apache License Version 2.0
+- honeycomb
+- kagome
