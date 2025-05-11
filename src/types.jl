@@ -4,9 +4,9 @@
 Abstract type for general lattices.
 For a more concrete definition please refer the following material:
 
-- Lattice (group): https://en.wikipedia.org/wiki/Lattice_(group)
-- Lattice Model: https://en.wikipedia.org/wiki/Lattice_model_(physics)
-- Lattice Graph: https://en.wikipedia.org/wiki/Lattice_graph
+- Lattice (group): <https://en.wikipedia.org/wiki/Lattice_(group)>
+- Lattice Model: <https://en.wikipedia.org/wiki/Lattice_model_(physics)>
+- Lattice Graph: <https://en.wikipedia.org/wiki/Lattice_graph>
 """
 abstract type AbstractLattice end
 
