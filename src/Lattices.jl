@@ -3,6 +3,7 @@ module Lattices
 import Base: size, ndims, length, show, nameof, ==, axes, strides, checkbounds
 using Base.Iterators
 using LinearAlgebra
+using DocStringExtensions
 
 export AbstractLattice, WeightedLattice, CoordinateLattice
 
