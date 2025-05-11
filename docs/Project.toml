@@ -1,5 +1,9 @@
 [deps]
 Documenter = "e30172f5-a6a5-5a46-863b-614d45cd2de4"
+Lattices = "c21dee59-005f-55b6-acfd-94526b082a96"
 
 [compat]
 Documenter = "1"
+
+[sources]
+Lattices = {path = ".."}
