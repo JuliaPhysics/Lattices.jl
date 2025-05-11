@@ -1,4 +1,15 @@
+"""
+$(TYPEDEF)
+
+Abstract supertype for all boundary conditions.
+"""
 abstract type AbstractBoundary end
+
+"""
+$(TYPEDEF)
+
+Periodic boundary condition.
+"""
 struct Periodic <: AbstractBoundary end
 struct Open <: AbstractBoundary end
 
